@@ -10,25 +10,25 @@ clc;
 NCRPKey = 0;
 
 % Plot smoothed Complex Radiation Pattern
-SCRPKey = 0;
+SCRPKey = 1;
 
 % Plot phase distribution
-PhaseKey = 0;
+PhaseKey = 1;
 
 % Plot not smoothed electric field
-NEFieldKey = 0;
+NEFieldKey = 1;
 
 % Plot smoothed electric field
-SEFieldKey = 0;
+SEFieldKey = 1;
 
 % Plot sampling area
-SAreaKey = 0;
+SAreaKey = 1;
 
 % Run optmization
-OptRunKey = 1;
+OptRunKey = 0;
 
 % Plot optimized results
-OptReskey = 0;
+OptReskey = 1;
 
 %% In this example calculation, the time dependence is exp(+i * ω * t), as is generally assumed in electrical engineering.
 % Therefore, when an EM wave propagates along a distance Rad in free space it acquires a phase delay given by the phase factor exp(-i * k0 * Rad),
@@ -39,22 +39,22 @@ OptReskey = 0;
 % Let us define the MS parameters: Rf, M, N, d
 global Rf;
 Rf = 50.000000;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\Rf.mat', 'Rf');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\Rf.mat', 'Rf');
 % Number of elements in each Rows
 global M;
 M = 10;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\M.mat', 'M');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\M.mat', 'M');
 % Number of elements in each Columns
 global N;
 N = 3;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\N.mat', 'N');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\N.mat', 'N');
 
 % Operational frequency
 Frequency = 10e9;
 
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
-Q = 1 / 5;
+Q = 1 / 4;
 
 % Let us define the sinc(x) function as a pattern
 % Let us now define some radiation pattern we want to realize. In particular, it makes sense to consider patterns
@@ -63,7 +63,7 @@ Q = 1 / 5;
 % Let us define the radiation pattern parameters with L beams:
 global L;
 L = 2;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\L.mat', 'L');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\L.mat', 'L');
 
 % Number of angles for constructing beams in arbitrary directions
 % Such as combination of Theta = [50, 25, 0, 25, 50] and Phi = [90, 90, 0, -90, -90] ==> {[Theta1, Phi1], [Theta2, Phi2], [Theta3, Phi3], [Theta4, Phi4], [Theta5, Phi5]}
@@ -74,7 +74,7 @@ ThetaPhiBeams = {[50, 0], [25, 0], [0, 0], [25, 180], [50, 180]};
 % d [cm] is the period of the MS (the distance between the centers of its elements), which is the same along x and y axes.
 global d;
 d = 0.68;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\d.mat', 'd');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\d.mat', 'd');
 
 % m and n are scalar values which presents mth and nth element of the metasurface array
 % Rad = @ (m, n) sqrt(Rf^2 + ((m - (M - 1) / 2) ^ 2 + (n - (N - 1) / 2) ^ 2) * d ^ 2);
@@ -97,7 +97,7 @@ sy = N / 1;
 % Let us define the free space wavelength (Lambda [cm]) and wavenumber:
 global Lambda;
 Lambda = physconst('LightSpeed') / Frequency * 100;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\Lambda.mat', 'Lambda');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\Lambda.mat', 'Lambda');
 k0 = 2 * pi / Lambda;
 
 % Number of cost function evaluation (NFE)
@@ -130,7 +130,7 @@ elementNo = M * N;
 angleSamplingNo = factorial(length(ThetaPhiBeams)) / (factorial(L) * factorial(length(ThetaPhiBeams) - L));
 % Determine beam combinations, each row includes Theta and Phi for each beam. For example for L = 2, we have [[Theta1, Phi1], [Theta2, Phi2]] in each row
 BeamCombinations = cell2mat(nchoosek(ThetaPhiBeams, L)) * pi / 180;
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\BeamCombinations.mat', 'BeamCombinations');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\BeamCombinations.mat', 'BeamCombinations');
 
 Theta = zeros(L * angleSamplingNo, 1);
 Phi = zeros(L * angleSamplingNo, 1);
@@ -140,11 +140,11 @@ for Counter = 1 : 1 : L
     Phi((Counter - 1) * angleSamplingNo + 1 : Counter * angleSamplingNo) = BeamCombinations(:, ColumnCounter + 1);
     ColumnCounter = ColumnCounter + 2;
 end
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\Theta.mat', 'Theta');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\Phi.mat', 'Phi');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\Theta.mat', 'Theta');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\Phi.mat', 'Phi');
 
 % Number of desired data sets
-noDesData = 100;
+noDesData = 10;
 
 % Smoothing Factor to make patterns more smoother
 SmoothingFactor = 5;
@@ -262,6 +262,12 @@ visibleAreaTheta = 0 : pi / 100 : 2 * pi;
 visibleAreaX = visibleAreaRadius .* cos(visibleAreaTheta) + V0;
 visibleAreaY = visibleAreaRadius .* sin(visibleAreaTheta) + U0;
 
+% Distance matrix for determining visible area
+Distance = sqrt(power(MaxLocUVBaseXSmoothed, 2) + power(MaxLocUVBaseYSmoothed, 2));
+
+% Determine which elements are inside visible area
+[InVisAreaX, InVisAreaY] = find(Distance <= visibleAreaRadius);
+
 % Protected area (ovals)
 ProtectedAreaPhi = 0 : pi / 100 : 2 * pi;
 
@@ -336,7 +342,7 @@ for dataSetCounter = 1 : 1 : noDesData
     Ub = 1 / 2;
     % Generate noise
     Noise = Lb + (Ub - Lb) .* rand(M, N);
-    Text = append('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\dataSet', num2str(dataSetCounter), 'Noise', '.mat');
+    Text = append('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\dataSet', num2str(dataSetCounter), 'Noise', '.mat');
     save(Text, 'Noise');
     
     for angleCounter = 1 : 1 : angleSamplingNo
@@ -344,7 +350,7 @@ for dataSetCounter = 1 : 1 : noDesData
         NFE = 0;
         
         % Determine a new path for saving data
-        PathText = append('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\noDataSet', num2str(dataSetCounter), 'ThetaAndPhiPairNo', num2str(angleCounter));
+        PathText = append('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\noDesData', num2str(dataSetCounter), 'ThetaAndPhiPairNo', num2str(angleCounter));
         mkdir(PathText);
         
         % Beam directions and states (u = k0 * d * sin(θ) * cos(φ), v = k0 * d * sin(θ) * sin(φ)) (Example: (0, 0) is at the center and perpendicular)
@@ -1382,7 +1388,7 @@ for dataSetCounter = 1 : 1 : noDesData
                 UVBase2DElecField = surf(MaxLocUVBaseXSmoothed, MaxLocUVBaseYSmoothed, optAbsElectricFieldSmoothed);
                 hold on;
                 % Plot visible area in UV-space
-                plot3(visibleAreaX, visibleAreaY, repmat(optAbsElectricFieldSmoothedMax, 1, length(visibleAreaTheta)), 'cyan', 'LineWidth', 2);
+                plot3(visibleAreaX, visibleAreaY, repmat(max(optAbsElectricFieldSmoothed(InVisAreaX, InVisAreaY), [], 'all'), 1, length(visibleAreaTheta)), 'cyan', 'LineWidth', 2);
                 xlim([-inf inf]);
                 ylim([-inf inf]);
                 colorbar;
@@ -1400,11 +1406,11 @@ for dataSetCounter = 1 : 1 : noDesData
                 hold off;
                 view(2);
                 subplot(1, 2, 2);
-                UVBase3DElecField = surf(MaxLocUVBaseXSmoothed, MaxLocUVBaseYSmoothed, optAbsElectricFieldSmoothed / optAbsElectricFieldSmoothedMax, 'DisplayName', 'Nor. |Electric Pattern|');
+                UVBase3DElecField = surf(MaxLocUVBaseXSmoothed, MaxLocUVBaseYSmoothed, optAbsElectricFieldSmoothed / max(optAbsElectricFieldSmoothed(InVisAreaX, InVisAreaY), [], 'all'), 'DisplayName', 'Nor. |Electric Pattern|');
                 hold on;
                 Leg2 = plot3(visibleAreaX(1, :, 1), visibleAreaY(1, :, 1), repmat(0, 1, length(visibleAreaTheta)), 'cyan', 'LineWidth', 2, 'DisplayName', 'Visible Area');
                 % Plot visible area in UV-space
-                for PatternValue = 0.1 : 0.1 : max(optAbsElectricFieldSmoothed(:, :), [], 'all') / optAbsElectricFieldSmoothedMax
+                for PatternValue = 0.1 : 0.1 : max(optAbsElectricFieldSmoothed(:, :), [], 'all') / max(optAbsElectricFieldSmoothed(InVisAreaX, InVisAreaY), [], 'all')
                     plot3(visibleAreaX, visibleAreaY, repmat(PatternValue, 1, length(visibleAreaTheta)), 'cyan', 'LineWidth', 2);
                 end
                 xlim([-inf inf]);
@@ -1441,31 +1447,31 @@ for dataSetCounter = 1 : 1 : noDesData
             thetaPhiPatESmoothedOpt(angleCounter, :, dataSetCounter) = reshape(PatternESmooth(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
             thetaPhiPatESmoothedOptNormalized(angleCounter, :, dataSetCounter) = reshape(PatternESmoothedNormalized(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
 
-%             PlotVisibleAndProtectedCRP
+            PlotVisibleAndProtectedCRP
 
         end
     end
 end
 
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
 
-% save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
-% save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatCRSmoothedNormalized.mat', 'thetaPhiPatCRSmoothedNormalized');
+% save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
+% save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatCRSmoothedNormalized.mat', 'thetaPhiPatCRSmoothedNormalized');
 
 
-% save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatE.mat', 'thetaPhiPatE');
-% save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatENormalized.mat', 'thetaPhiPatENormalized');
-% save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatEOpt.mat', 'thetaPhiPatEOpt');
-% save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatEOptNormalized.mat', 'thetaPhiPatEOptNormalized');
+% save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatE.mat', 'thetaPhiPatE');
+% save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatENormalized.mat', 'thetaPhiPatENormalized');
+% save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatEOpt.mat', 'thetaPhiPatEOpt');
+% save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatEOptNormalized.mat', 'thetaPhiPatEOptNormalized');
 
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatESmoothed.mat', 'thetaPhiPatESmoothed');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatESmoothedNormalized.mat', 'thetaPhiPatESmoothedNormalized');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatESmoothedOpt.mat', 'thetaPhiPatESmoothedOpt');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\thetaPhiPatESmoothedOptNormalized.mat', 'thetaPhiPatESmoothedOptNormalized');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatESmoothed.mat', 'thetaPhiPatESmoothed');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatESmoothedNormalized.mat', 'thetaPhiPatESmoothedNormalized');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatESmoothedOpt.mat', 'thetaPhiPatESmoothedOpt');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\thetaPhiPatESmoothedOptNormalized.mat', 'thetaPhiPatESmoothedOptNormalized');
 
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\Coeff1.mat', 'Coeff1');
-save('C:\Users\Administrator\Desktop\AI-Beam MATLAB\Data\Coeff2.mat', 'Coeff2');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\Coeff1.mat', 'Coeff1');
+save('C:\Users\AI-BEAM\Documents\MATLAB\Optimization Data\Coeff2.mat', 'Coeff2');
