@@ -1446,9 +1446,7 @@ for dataSetCounter = 1 : 1 : noDesData
             %  thetaPhiPatEOptNormalized(angleCounter, L * 2 + 1 : end, dataSetCounter) = reshape(PatternENormalized(:, :, NFE), 1, elementNo);
             thetaPhiPatESmoothedOpt(angleCounter, :, dataSetCounter) = reshape(PatternESmooth(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
             thetaPhiPatESmoothedOptNormalized(angleCounter, :, dataSetCounter) = reshape(PatternESmoothedNormalized(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
-
-            PlotVisibleAndProtectedCRP
-
+            
         end
     end
 end
