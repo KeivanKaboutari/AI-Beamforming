@@ -21,7 +21,7 @@ function optimizationFunction(stochasticPhase, evaluationNumber, Band)
     stochasticPhase = PhaseValuesPerIteration(:, :, NFE);
     
     % Finds phases which are close to the boundaries
-    if ~isempty(find(stochasticPhase > Criterion, M * N)) || ~isempty(find(stochasticPhase < -Criterion, M * N))
+    if ~isempty(find(stochasticPhase > Criterion, N * M)) || ~isempty(find(stochasticPhase < -Criterion, N * M))
         stochasticPhase(stochasticPhase > Criterion) = 0;
         stochasticPhase(stochasticPhase < -Criterion) = 0;
         optFlag = 1;

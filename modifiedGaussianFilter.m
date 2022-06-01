@@ -1,12 +1,10 @@
-% function [Gaussian3D] = modifiedGaussianFilter(U, V)
 function [modifiedGaussian3D] = modifiedGaussianFilter(U, V, BeamNum)
-    global L u0 v0 Lambda d;
+    global k0 d L u0 v0;
 
     % Initialize the outpout of the modified Gaussian function
     modifiedGaussian3D = 0;
     
     % Standard deviation of the distribution
-    k0 = 2 * pi / Lambda;
     STD = k0 * d;
     
     %% 2D customized Gaussian filter

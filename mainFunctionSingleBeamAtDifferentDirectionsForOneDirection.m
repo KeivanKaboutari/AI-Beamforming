@@ -28,25 +28,25 @@ global PatternESmooth PatternESmoothedNormalized;
 NCRPKey = 0;
 
 % Plot smoothed Complex Radiation Pattern
-SCRPKey = 0;
+SCRPKey = 1;
 
 % Plot phase distribution
-PhaseKey = 0;
+PhaseKey = 1;
 
 % Plot not smoothed electric field
 NEFieldKey = 0;
 
 % Plot smoothed electric field
-SEFieldKey = 0;
+SEFieldKey = 1;
 
 % Plot sampling area
-SAreaKey = 0;
+SAreaKey = 1;
 
 % Run optmization
-OptRunKey = 1;
+OptRunKey = 0;
 
 % Plot optimized results
-OptReskey = 0;
+OptReskey = 1;
 
 %% In this example calculation, the time dependence is exp(+i * ω * t), as is generally assumed in electrical engineering.
 % Therefore, when an EM wave propagates along a distance Rad in free space it acquires a phase delay given by the phase factor exp(-i * k0 * Rad),
@@ -68,11 +68,11 @@ N = 3;
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\N.mat', 'N');
 
 % Operational frequency
-Frequency = 10e9;
+Frequency = 5e9;
 
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
-Q = 1 / 5;
+Q = 1 / 4;
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\Q.mat', 'Q');
 
 % Let us define the sinc(x) function as a pattern
@@ -81,14 +81,8 @@ save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\Q.mat', 'Q');
 % of a rectangular aperture with the size sx * d by sy * d. Thus for the radiation pattern with L beams we have
 % Let us define the radiation pattern parameters with L beams:
 global L;
-L = 2;
+L = 1;
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\L.mat', 'L');
-
-% Number of angles for constructing beams in arbitrary directions
-% Such as combination of Theta = [50, 25, 0, 25, 50] and Phi = [90, 90, 0, -90, -90] ==> {[Theta1, Phi1], [Theta2, Phi2], [Theta3, Phi3], [Theta4, Phi4], [Theta5, Phi5]}
-ThetaPhiBeams = {[30, 45], [30, 225]};
-% ThetaPhiBeams = {[50, 0], [50, 180]};
-% ThetaPhiBeams = {[50, 0], [25, 0], [0, 0], [25, 180], [50, 180]};
 
 % Rad(n, m) is the radial distance from the source antenna to the (m, n)-th element of the MS.
 % d [cm] is the period of the MS (the distance between the centers of its elements), which is the same along x and y axes.
@@ -124,20 +118,12 @@ k0 = 2 * pi / Lambda;
 % MS number of elements
 elementNo = N * M;
 
-% Number of angle sets (nCr = n! / r! * (n - r)!)
-angleSamplingNo = factorial(length(ThetaPhiBeams)) / (factorial(L) * factorial(length(ThetaPhiBeams) - L));
-% Determine beam combinations, each row includes Theta and Phi for each beam. For example for L = 2, we have [[Theta1, Phi1], [Theta2, Phi2]] in each row
-BeamCombinations = cell2mat(nchoosek(ThetaPhiBeams, L)) * pi / 180;
-save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\BeamCombinations.mat', 'BeamCombinations');
-
-Theta = zeros(L * angleSamplingNo, 1);
-Phi = zeros(L * angleSamplingNo, 1);
-ColumnCounter = 1;
-for Counter = 1 : 1 : L
-    Theta((Counter - 1) * angleSamplingNo + 1 : Counter * angleSamplingNo) = BeamCombinations(:, ColumnCounter);
-    Phi((Counter - 1) * angleSamplingNo + 1 : Counter * angleSamplingNo) = BeamCombinations(:, ColumnCounter + 1);
-    ColumnCounter = ColumnCounter + 2;
-end
+% Generate Theta and Phi samples which is distributed equidistantly over the upper part of spherical
+% Select point distribution over upper half hemisphere equidistantly
+% 1 for selecting Fibo method and 2 for selecting Cube method
+angleSamplingNo = 1;
+Theta = 30 * pi / 180;
+Phi = 45 * pi / 180;
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\Theta.mat', 'Theta');
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\Phi.mat', 'Phi');
 
@@ -149,7 +135,7 @@ global SmoothingFactor;
 SmoothingFactor = 5;
 
 % Get values around the u0 and v0 to find main beams amplitude
-DistanceFromCenter = 5;
+DistanceFromCenter = 4;
 
 % Criterian of the optimization algorithm to change some of phase values which avoids criteriaon
 global Criterion;
@@ -188,9 +174,9 @@ thetaPhiPatESmoothedOpt = zeros(angleSamplingNo, elementNo * SmoothingFactor * S
 thetaPhiPatESmoothedOptNormalized = zeros(angleSamplingNo, elementNo * SmoothingFactor * SmoothingFactor, noDesData);
 
 % Initialize Theta and Phi values into the related arrays
-thetaPhiPhaseWoN(:, 1 : 2 * L, :) = repmat(BeamCombinations, [1 1 noDesData]);
-thetaPhiPhaseWN(:, 1 : 2 * L, :) = repmat(BeamCombinations, [1 1 noDesData]);
-thetaPhiPhaseOpt(:, 1 : 2 * L, :) = repmat(BeamCombinations, [1 1 noDesData]);
+thetaPhiPhaseWoN(:, 1 : 2, :) = repmat([transpose(Theta), transpose(Phi)], [1 1 noDesData]);
+thetaPhiPhaseWN(:, 1 : 2, :) = repmat([transpose(Theta), transpose(Phi)], [1 1 noDesData]);
+thetaPhiPhaseOpt(:, 1 : 2, :) = repmat([transpose(Theta), transpose(Phi)], [1 1 noDesData]);
 
 % thetaPhiPatCR(:, 1 : 2, :) = repmat([transpose(Theta), transpose(Phi)], [1 1 noDesData]);
 % thetaPhiPatCRNormalized(:, 1 : 2, :) = repmat([transpose(Theta), transpose(Phi)], [1 1 noDesData]);
@@ -248,6 +234,7 @@ MaxLocUVBaseMeshY = 2 * pi * (lValues - (N - 1) / 2) / (N - 1);
 MaxLocUVBaseMeshXSmoothed = 2 * pi * (kValuesSmoothed - (M - 1) / 2) / (M - 1);
 MaxLocUVBaseMeshYSmoothed = 2 * pi * (lValuesSmoothed - (N - 1) / 2) / (N - 1);
 % Generate mesh grid for plotting E-field in uv-space and finding exact loacation of beams
+global gridMaxLocUVBaseXSmoothed gridMaxLocUVBaseYSmoothed;
 [gridMaxLocUVBaseXSmoothed, gridMaxLocUVBaseYSmoothed] = meshgrid(MaxLocUVBaseMeshXSmoothed, MaxLocUVBaseMeshYSmoothed);
 
 % Calculate distance from center of the visible area (indeed, MS)
@@ -315,7 +302,7 @@ for dataSetCounter = 1 : 1 : noDesData
         NFE = 0;
         
         % Determine a new path for saving data
-        PathText = append('C:\Users\k.kaboutari\Desktop\New 20220524\Data\noDesData', num2str(dataSetCounter), 'ThetaAndPhiPairNo', num2str(angleCounter));
+        PathText = append('C:\Users\k.kaboutari\Desktop\New 20220524\Data\noDesData', num2str(dataSetCounter), 'Theta', num2str(angleCounter), ', ', num2str(Theta(angleCounter)), ' and Phi', num2str(angleCounter), ', ', num2str(Phi(angleCounter)));
         mkdir(PathText);
         
         % Beam directions and states (u = k0 * d * sin(θ) * cos(φ), v = k0 * d * sin(θ) * sin(φ)) (Example: (0, 0) is at the center and perpendicular)
@@ -324,21 +311,19 @@ for dataSetCounter = 1 : 1 : noDesData
         u0 = zeros(1, L);
         v0 = zeros(1, L);
         ControlFactor = zeros(1, L);
-        ColumnCounter = 1;
         for Counter = 1 : 1 : L
-            u0(Counter) = k0 * d * sin(BeamCombinations(angleCounter, ColumnCounter)) * cos(BeamCombinations(angleCounter, ColumnCounter + 1));
-            v0(Counter) = k0 * d * sin(BeamCombinations(angleCounter, ColumnCounter)) * sin(BeamCombinations(angleCounter, ColumnCounter + 1));
+            u0(Counter) = k0 * d * sin(Theta(angleCounter)) * cos(Phi(angleCounter));
+            v0(Counter) = k0 * d * sin(Theta(angleCounter)) * sin(Phi(angleCounter));
             ControlFactor(Counter) = 1;
-            ColumnCounter = ColumnCounter + 2;
         end
         % Custimize the ControlFactor to control beam's gain
         % ControlFactor(2) = 0.5;
         % ControlFactor = ones(1, L);
         
         % Save u0 and v0
-        Text = append(PathText, '\u0ThetaAndPhiPairNo', num2str(angleCounter), '.mat');
+        Text = append(PathText, '\u0Theta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
         save(Text, 'u0');
-        Text = append(PathText, '\v0ThetaAndPhiPairNo', num2str(angleCounter), '.mat');
+        Text = append(PathText, '\v0Theta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
         save(Text, 'v0');
         
         %% =============================================================================================================================================================================================
@@ -346,7 +331,7 @@ for dataSetCounter = 1 : 1 : noDesData
         % Pattern of the antenna (EXAMPLE). u and v are scalar values.
         % Pattern = @(u, v) sum(sinc(sx * (u - u0) / (2 * pi)) .* sinc(sy * (v - v0) / (2 * pi)));
         
-        % Complex value of radiation pattern's samples at different values of u and v (project pattern)
+        % Complex value of radiation pattern's samples at different values of u and v
 %         ComplexRP = ComplexRadiationPatternOld(kValues, lValues);
 %         ComplexRPSmoothed = ComplexRadiationPatternOld(kValuesSmoothed, lValuesSmoothed);
         ComplexRP = abs(ComplexRadiationPattern(2 * pi * (kValues - (M - 1) / 2) / (M - 1), 2 * pi * (lValues - (N - 1) / 2) / (N - 1)));
@@ -388,7 +373,7 @@ for dataSetCounter = 1 : 1 : noDesData
             CorrectionFactorCPR(Counter) = 1 ./ BeamMaxCRP(Counter);
             CorrectionMatrixCRP(:, :, Counter) = CorrectionFactorCPR(Counter) .* BeamMatCPR(:, :, Counter);
             
-            Text = append(PathText, '\ComplexRPMaxSmoothedThetaAndPhiPairNo', num2str(angleCounter), 'L', num2str(Counter), '.mat');
+            Text = append(PathText, '\ComplexRPMaxSmoothedTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
 %             CRPSmoothedMAX = ComplexRPSmoothed(MaxYLoc(Counter), MaxXLoc(Counter));
             CRPSmoothedMAX = BeamMaxCRP(Counter);
             save(Text, 'CRPSmoothedMAX');
@@ -418,13 +403,13 @@ for dataSetCounter = 1 : 1 : noDesData
             SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP');
             
             % Plot of smoothed CRP in the xy-plane (Theta = 90 deg) calculated in polar system
-            PolarPlot2D('Project pattern on the xy-plane (Theta = 90 deg)', 'xy-plane', 'CRP');
+            PolarPlot2D('Project pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'CRP');
             
             % Plot of smoothed CRP in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-            PolarPlot2D('Project pattern on the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'CRP');
+            PolarPlot2D('Project pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'CRP');
             
             % Plot of smoothed CRP in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-            PolarPlot2D('Project pattern on the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'CRP');
+            PolarPlot2D('Project pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'CRP');
         end
         
         %% =============================================================================================================================================================================================
@@ -478,7 +463,7 @@ for dataSetCounter = 1 : 1 : noDesData
                                                 gridUVBaseX, 'u-axis', gridUVBaseY, 'v-axis', 'UV-space', ...
                                                 SizeEleX, 'Column Dimension (x)', SizeEleY, 'Row Dimension (y)', 'Physical dimension', ...
                                                                                                                                        [1, 1, 1]);
-            
+
         end
         %% =============================================================================================================================================================================================
         %% Calculate Electrical Field
@@ -518,7 +503,7 @@ for dataSetCounter = 1 : 1 : noDesData
                 disp(['Electric Field Max. value for ' num2str(Counter) ' beam is: ' num2str(ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshX(MaxXLoc(Counter)), MaxLocUVBaseMeshY(MaxYLoc(Counter))]))]);
             end
         end
-
+        
         % Calculate Smoothed Electrical Field
         AbsElectricFieldSmoothed = zeros(round(SmoothingFactor * N), round(SmoothingFactor * M));
         for kCounter = 1 : 1 : round(SmoothingFactor * M)
@@ -541,7 +526,7 @@ for dataSetCounter = 1 : 1 : noDesData
             BeamMatEF(:, :, Counter) = AbsElectricFieldSmoothed(MaxYLocRange(Counter, :), MaxXLocRange(Counter, :));
             BeamMaxEF(Counter) = max(BeamMatEF(:, :, Counter), [], 'all');
             
-            Text = append(PathText, '\EFMaxSmoothedThetaAndPhiPairNo', num2str(angleCounter), 'L', num2str(Counter), '.mat');
+            Text = append(PathText, '\EFMaxSmoothedTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
 %             EFSmoothedMAX = ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshYSmoothed(MaxYLoc(Counter)), MaxLocUVBaseMeshXSmoothed(MaxXLoc(Counter))]);
             EFSmoothedMAX = BeamMaxEF(Counter);
             save(Text, 'EFSmoothedMAX');
@@ -623,13 +608,13 @@ for dataSetCounter = 1 : 1 : noDesData
             SphericalPlot3D('Electrical field in spherical space', 'Normalized |E(x,y)|', 'EP');
             
             % Plot of electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
-            PolarPlot2D('Electric pattern on the xy-plane (Theta = 90 deg)', 'xy-plane', 'EP');
+            PolarPlot2D('Electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'EP');
             
             % Plot of electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-            PolarPlot2D('Electric pattern on the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'EP');
+            PolarPlot2D('Electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'EP');
             
             % Plot of electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-            PolarPlot2D('Electric pattern on the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'EP');
+            PolarPlot2D('Electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'EP');
         end
         
         %% Equidistant distribution of sampling points
@@ -693,7 +678,7 @@ for dataSetCounter = 1 : 1 : noDesData
         % FixedOutsideSamplingPointsValues= rmmissing(OutsideProtectedAreaScatteredPointsProperties(:, 1 : 2));
         OutsideSamplingPoints = length([[[OutsideProtectedAreaScatteredPointsProperties((all((~isnan(OutsideProtectedAreaScatteredPointsProperties(:, 1 : 2))), 2)), 1 : 2)]; [UandVNeg(:, 1 : 2)]; [UandVPos(:, 1 : 2)]; [VandUNeg(:, 1 : 2)]; [VandUPos(:, 1 : 2)]]]);
         FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, :) = [[[OutsideProtectedAreaScatteredPointsProperties((all((~isnan(OutsideProtectedAreaScatteredPointsProperties(:, 1 : 2))), 2)), 1 : 2)]; [UandVNeg(:, 1 : 2)]; [UandVPos(:, 1 : 2)]; [VandUNeg(:, 1 : 2)]; [VandUPos(:, 1 : 2)]]];
-        Text = append(PathText, '\FixedOutsideSamplingPointsValuesThetaAndPhiPairNo', num2str(angleCounter), '.mat');
+        Text = append(PathText, '\FixedOutsideSamplingPointsValuesTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
         save(Text, 'FixedOutsideSamplingPointsValues');
         
         % For the scattered points inside of the protected area, a rectangular grid with equidistant points are produced and shifted to the beams directions
@@ -729,7 +714,7 @@ for dataSetCounter = 1 : 1 : noDesData
         for BeamCounter = 1 : 1 : L
             FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, :, BeamCounter) = InsideProtectedAreaScatteredPointsProperties(:, 1 : 2, BeamCounter);
         end
-        Text = append(PathText, '\FixedInsideSamplingPointsValuesThetaAndPhiPairNo', num2str(angleCounter), '.mat');
+        Text = append(PathText, '\FixedInsideSamplingPointsValuesTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
         save(Text, 'FixedInsideSamplingPointsValues');
         
         if SAreaKey == 1
@@ -779,7 +764,9 @@ for dataSetCounter = 1 : 1 : noDesData
             optAbsElectricFieldSmoothedMax = 0;
             for Counter = 1 : 1 : L
                 [ValX(Counter), MaxXLoc(Counter)] = min(abs(MaxLocUVBaseMeshXSmoothed - u0(Counter)));
-                Text = append(PathText, '\OptEFMaxSmoothedThetaAndPhiPairNo', num2str(angleCounter), 'L', num2str(Counter), '.mat');
+                [ValY(Counter), MaxYLoc(Counter)] = min(abs(MaxLocUVBaseMeshYSmoothed - v0(Counter)));
+                
+                Text = append(PathText, '\OptEFMaxSmoothedTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
                 OptEFSmoothedMAX = ElecFieldFun(optComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(MaxXLoc), MaxLocUVBaseMeshYSmoothed(MaxYLoc)]);
                 save(Text, 'OptEFSmoothedMAX');
                 if OptEFSmoothedMAX > optAbsElectricFieldSmoothedMax
@@ -812,6 +799,7 @@ for dataSetCounter = 1 : 1 : noDesData
                                                                                                                                                      [1, 1, 1]);
                 
                 % Calculate Smoothed Electrical Field
+                global optAbsElectricFieldSmoothed;
                 optAbsElectricFieldSmoothed = zeros(round(SmoothingFactor * N), round(SmoothingFactor * M));
                 for kCounter = 1 : 1 : round(SmoothingFactor * M)
                     u = -pi + kValuesSmoothed(kCounter) * 2 * pi / (M - 1);
@@ -823,10 +811,10 @@ for dataSetCounter = 1 : 1 : noDesData
                     end
                 end
                 
-%                 % Element-base Electrical Field
+                % Element-base Electrical Field
 %                 optAbsElectricFieldSmoothedMax = max(optAbsElectricFieldSmoothed, [], 'all');
                 optAbsElectricFieldSmoothedMax = max(optAbsElectricFieldSmoothed(centerDistance < visibleAreaRadius));
-                
+
                 % Plot 2D and 3D Optimized Far-Field Radiation Pattern in uv-Base
                 Plot2Dand3D('2D and 3D Optimized Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', optAbsElectricFieldSmoothed, '|E_{Opt.}(u,v)|', optAbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0);
                 
@@ -834,22 +822,22 @@ for dataSetCounter = 1 : 1 : noDesData
                 SphericalPlot3D('Optimized electrical field in spherical space', 'Normalized |E_{Opt.}(x,y)|', 'OptEP');
                 
                 % Plot of optimized electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
-                PolarPlot2D('Optimized electric pattern on the xy-plane (Theta = 90 deg)', 'xy-plane', 'OptEP');
+                PolarPlot2D('Optimized electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'OptEP');
                 
                 % Plot of optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern on the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'OptEP');
+                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'OptEP');
                 
                 % Plot of optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern on the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'OptEP');
-
+                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'OptEP');
+                
                 % Plot of smoothed CRP, EF, and OptEF in the xy-plane (Theta = 90 deg) calculated in polar system
-                PolarPlot2D('Project, EF, and Optimized EF patterns on the xy-plane (Theta = 90 deg)', 'xy-plane', 'All');
+                PolarPlot2D('Project pattern, EF, and OptEF in the xy-plane (Theta = 90 deg)', 'xy-plane', 'All');
                 
                 % Plot of smoothed CRP, EF, and OptEF in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-                PolarPlot2D('Project, EF, and Optimized EF patterns on the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'All');
+                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'All');
                 
                 % Plot of smoothed CRP, EF, and OptEF in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-                PolarPlot2D('Project, EF, and Optimized EF patterns on the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'All');
+                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'All');
             end
             
             % Save data
