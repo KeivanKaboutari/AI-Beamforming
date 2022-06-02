@@ -1,4 +1,8 @@
 function hn = Arrow3D(p1, p2, s, w, h, ip, alpha, beta)
+%% Arrow3D code version 4.58 was obtained from MATLAB Central File Exchange,
+%% (C) Jeff Chang (2022) (https://www.mathworks.com/matlabcentral/fileexchange/1430-arrow3-version-4-58).
+%% Arrow3 version 4.58
+%% https://www.mathworks.com
 % ARROW3D (R13)
 %   Arrow3D(P1,P2) draws lines from P1 to P2 with directional arrowheads.
 %   P1 and P2 are either nx2 or nx3 matrices.  Each row of P1 is an
