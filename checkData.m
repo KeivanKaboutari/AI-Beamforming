@@ -14,8 +14,8 @@ global ComplexPhaseFactor optComplexPhaseFactor;
 
 %% Load data
 % Load M and N
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\M.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\N.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\M.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\N.mat');
 
 global sx sy;
 sx = M / 1;
@@ -25,28 +25,28 @@ sy = N / 1;
 Confine = @(x) pi - mod(pi - x, 2 * pi);
 
 % Load L, d, and Lambda
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\L.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\d.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\Lambda.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\L.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\d.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\Lambda.mat');
 
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPhaseWoN.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPhaseWN.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPhaseOpt.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPhaseWoN.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPhaseWN.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPhaseOpt.mat');
 
 % Load project pattern
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPatCRSmoothed.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPatCRSmoothedNormalized.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPatCRSmoothed.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPatCRSmoothedNormalized.mat');
 
 % Load electric field (before and after optimization)
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPatESmoothed.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPatESmoothedNormalized.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPatESmoothedOpt.mat');
-load('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\Two Beams (Final)\100 Datasets\thetaPhiPatESmoothedOptNormalized.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPatESmoothed.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPatESmoothedNormalized.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPatESmoothedOpt.mat');
+load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Two Beam ([50, 0], [50, 180])\thetaPhiPatESmoothedOptNormalized.mat');
 
 % Number of data sets
 DataSet = 100;
 % Number of points per data set
-PointsNum = 10;
+PointsNum = 1;
 % Number of antenna elements
 AntennaElements = N * M;
 
@@ -54,12 +54,15 @@ AntennaElements = N * M;
 SmoothingFactor = 5;
 
 %% Select which Theta and Phi to plot
-selectThetaPhi = 4;
+selectThetaPhi = 1;
 % Select data set
 selectDataSet = 1;
 
-ComplexPhaseFactor = transpose(1 * exp(1i * reshape(thetaPhiPhaseWN(selectThetaPhi, 2 * L + 1 : end, selectDataSet), M, N)));
-optComplexPhaseFactor = transpose(1 * exp(1i * reshape(thetaPhiPhaseOpt(selectThetaPhi, 2 * L + 1 : end, selectDataSet), M, N)));
+ComplexPhaseFactor = 1 * exp(1i * reshape(thetaPhiPhaseWN(selectThetaPhi, 2 * L + 1 : end, selectDataSet), N, M));
+optComplexPhaseFactor = 1 * exp(1i * reshape(thetaPhiPhaseOpt(selectThetaPhi, 2 * L + 1 : end, selectDataSet), N, M));
+
+% ComplexPhaseFactor = transpose(1 * exp(1i * reshape(thetaPhiPhaseWN(selectThetaPhi, 2 * L + 1 : end, selectDataSet), M, N)));
+% optComplexPhaseFactor = transpose(1 * exp(1i * reshape(thetaPhiPhaseOpt(selectThetaPhi, 2 * L + 1 : end, selectDataSet), M, N)));
 
 display('[Theta Phi] in rad. =');
 for Counter = 1 : 1 : L
@@ -81,12 +84,12 @@ end
 display('[u0, v0] =');
 double([u0, v0])
 
-loadedCRSmoothed = reshape(thetaPhiPatCRSmoothed(selectThetaPhi, :, selectDataSet), M * SmoothingFactor, N * SmoothingFactor);
-loadedCRSmoothedNormalized = reshape(thetaPhiPatCRSmoothedNormalized(selectThetaPhi, :, selectDataSet),  M * SmoothingFactor, N * SmoothingFactor);
-loadedAbsElectricFieldSmoothed = reshape(thetaPhiPatESmoothed(selectThetaPhi, :, selectDataSet),  M * SmoothingFactor, N * SmoothingFactor);
-loadedAbsElectricFieldSmoothedNormalized = reshape(thetaPhiPatESmoothedNormalized(selectThetaPhi, :, selectDataSet),  M * SmoothingFactor, N * SmoothingFactor);
-loadedAbsElectricFieldSmoothedOpt = transpose(reshape(thetaPhiPatESmoothedOpt(selectThetaPhi, :, selectDataSet),  M * SmoothingFactor, N * SmoothingFactor));
-loadedAbsElectricFieldSmoothedOptNormalized = reshape(thetaPhiPatESmoothedOptNormalized(selectThetaPhi, :, selectDataSet),  M * SmoothingFactor, N * SmoothingFactor);
+loadedCRSmoothed = reshape(thetaPhiPatCRSmoothed(selectThetaPhi, :, selectDataSet), N * SmoothingFactor, M * SmoothingFactor);
+loadedCRSmoothedNormalized = reshape(thetaPhiPatCRSmoothedNormalized(selectThetaPhi, :, selectDataSet),  N * SmoothingFactor, M * SmoothingFactor);
+loadedAbsElectricFieldSmoothed = reshape(thetaPhiPatESmoothed(selectThetaPhi, :, selectDataSet),  N * SmoothingFactor, M * SmoothingFactor);
+loadedAbsElectricFieldSmoothedNormalized = reshape(thetaPhiPatESmoothedNormalized(selectThetaPhi, :, selectDataSet),  N * SmoothingFactor, M * SmoothingFactor);
+loadedAbsElectricFieldSmoothedOpt = reshape(thetaPhiPatESmoothedOpt(selectThetaPhi, :, selectDataSet),  N * SmoothingFactor, M * SmoothingFactor);
+loadedAbsElectricFieldSmoothedOptNormalized = reshape(thetaPhiPatESmoothedOptNormalized(selectThetaPhi, :, selectDataSet),  N * SmoothingFactor, M * SmoothingFactor);
 
 % Complex value of radiation pattern's samples at different values of u and v
 % Mesh regarding Massive MIMO Antenna rows and columns indices (Element Base)
@@ -177,7 +180,7 @@ save('C:\Users\k.kaboutari\Documents\MATLAB\Optimization Data\PhaseOpt.mat', 'Ph
 %% Plot results related to the project pattern
 % Plot 2D and 3d complex value of radiation pattern in xy and uv space
 ComplexRPMaxSmoothed = max(transpose(loadedCRSmoothed), [], 'all');
-Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', transpose(loadedCRSmoothed), '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0);
+Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', loadedCRSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0);
 % Smoothed complex radiation pattern in spherical coordinate
 SphericalPlot3D('Complex radiation pattern in spherical space', '|C(x,y)|', 'CRP');
 % Plot of smoothed CRP in the xy-plane (Theta = 90 deg) calculated in polar system
@@ -190,7 +193,7 @@ PolarPlot2D('Project pattern on the xz-plane (Phi = 0 or 180 deg, therefore v = 
 %% Plot results related to the electrical field
 AbsElectricFieldSmoothedMax = max(loadedAbsElectricFieldSmoothed, [], 'all');
 % Plot electric field in uv coordinate
-Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', transpose(loadedAbsElectricFieldSmoothed), '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [0, 0], 0);
+Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', loadedAbsElectricFieldSmoothed, '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [0, 0], 0);
 % Smoothed electrical field in spherical coordinate
 SphericalPlot3D('Electrical field in spherical space', 'Normalized |E(x,y)|', 'EP');
 % Plot of electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
@@ -225,7 +228,7 @@ for figureCounter = 1 : 1 : PointsNum
     hold on;
     grid on;
     for dataCounter = 1 : 1 : DataSet
-        plot(1 : 1 : AntennaElements, thetaPhiPhaseWoN(figureCounter, 2 * L + 1 : end, dataCounter));
+        plot(1 : 1 : AntennaElements, reshape(transpose(reshape(thetaPhiPhaseWoN(figureCounter, 2 * L + 1 : end, dataCounter), N, M)), 1, N * M));
         ylim([-pi pi]);
     end
 end
@@ -238,7 +241,7 @@ for figureCounter = 1 : 1 : PointsNum
     hold on;
     grid on;
     for dataCounter = 1 : 1 : DataSet
-        plot(1 : 1 : AntennaElements, thetaPhiPhaseWN(figureCounter, 2 * L + 1 : end, dataCounter));
+        plot(1 : 1 : AntennaElements, reshape(transpose(reshape(thetaPhiPhaseWN(figureCounter, 2 * L + 1 : end, dataCounter), N, M)), 1, N * M));
         ylim([-pi pi]);
     end
 end
@@ -251,7 +254,7 @@ for figureCounter = 1 : 1 : PointsNum
     hold on;
     grid on;
     for dataCounter = 1 : 1 : DataSet
-        plot(1 : 1 : AntennaElements, thetaPhiPhaseOpt(figureCounter, 2 * L + 1 : end, dataCounter));
+        plot(1 : 1 : AntennaElements, reshape(transpose(reshape(thetaPhiPhaseOpt(figureCounter, 2 * L + 1 : end, dataCounter), N, M)), 1, N * M));
         ylim([-pi pi]);
     end
 end
