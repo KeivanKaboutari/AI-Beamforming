@@ -471,7 +471,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                 TextOptEF = append("Normalized electric field pattern after optimization");
                 
                 % Adjustment of the magnitudes with new scale
-                Plot2DCRP = plot(XaxisCRP, YaxisCRP, 'LineWidth', 2, 'Color', 'black', 'LineStyle', '--', 'DisplayName', TextCRP);
+                Plot2DCRP = plot(XaxisCRP / NormalizingFactorCRP * NormalizingFactor, YaxisCRP / NormalizingFactorCRP * NormalizingFactor, 'LineWidth', 2, 'Color', 'black', 'LineStyle', '--', 'DisplayName', TextCRP);
                 Plot2DEF = plot(XaxisEF / NormalizingFactorEF * NormalizingFactor, YaxisEF / NormalizingFactorEF * NormalizingFactor, 'LineWidth', 2, 'Color', 'magenta', 'LineStyle', ':', 'DisplayName', TextEF);
                 Plot2DOptEF = plot(XaxisOptEF / NormalizingFactorOptEF * NormalizingFactor, YaxisOptEF / NormalizingFactorOptEF * NormalizingFactor, 'LineWidth', 2, 'Color', 'blue', 'DisplayName', TextOptEF);
                 text(1.05 * NormalizingFactor *  cos(45 * pi / 180), 1.05 * NormalizingFactor *  sin(45 * pi / 180), '\theta = 90^\circ', 'Color', 'magenta', 'FontSize', 18, 'DefaultAxesFontName', 'Times New Roman', 'DefaultAxesFontWeight', 'bold');
@@ -527,7 +527,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                 TextOptEF = append("Normalized electric field pattern after optimization");
                 
                 % Adjustment of the magnitudes with new scale
-                Plot2DCRP = plot(XaxisCRP, YaxisCRP, 'LineWidth', 2, 'Color', 'black', 'LineStyle', '--', 'DisplayName', TextCRP);
+                Plot2DCRP = plot(XaxisCRP / NormalizingFactorCRP * NormalizingFactor, YaxisCRP / NormalizingFactorCRP * NormalizingFactor, 'LineWidth', 2, 'Color', 'black', 'LineStyle', '--', 'DisplayName', TextCRP);
                 Plot2DEF = plot(XaxisEF / NormalizingFactorEF * NormalizingFactor, YaxisEF / NormalizingFactorEF * NormalizingFactor, 'LineWidth', 2, 'Color', 'magenta', 'LineStyle', ':', 'DisplayName', TextEF);
                 Plot2DOptEF = plot(XaxisOptEF / NormalizingFactorOptEF * NormalizingFactor, YaxisOptEF / NormalizingFactorOptEF * NormalizingFactor, 'LineWidth', 2, 'Color', 'blue', 'DisplayName', TextOptEF);
                 legend([Plot2DCRP, Plot2DEF, Plot2DOptEF], 'FontWeight', 'bold', 'FontSize' , 16, 'FontName' , 'Times New Roman', 'Location', 'south');
@@ -582,7 +582,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                 TextOptEF = append("Normalized electric field pattern after optimization");
                 
                 % Adjustment of the magnitudes with new scale
-                Plot2DCRP = plot(XaxisCRP, YaxisCRP, 'LineWidth', 2, 'Color', 'black', 'LineStyle', '--', 'DisplayName', TextCRP);
+                Plot2DCRP = plot(XaxisCRP / NormalizingFactorCRP * NormalizingFactor, YaxisCRP / NormalizingFactorCRP * NormalizingFactor, 'LineWidth', 2, 'Color', 'black', 'LineStyle', '--', 'DisplayName', TextCRP);
                 Plot2DEF = plot(XaxisEF / NormalizingFactorEF * NormalizingFactor, YaxisEF / NormalizingFactorEF * NormalizingFactor, 'LineWidth', 2, 'Color', 'magenta', 'LineStyle', ':', 'DisplayName', TextEF);
                 Plot2DOptEF = plot(XaxisOptEF / NormalizingFactorOptEF * NormalizingFactor, YaxisOptEF / NormalizingFactorOptEF * NormalizingFactor, 'LineWidth', 2, 'Color', 'blue', 'DisplayName', TextOptEF);
                 legend([Plot2DCRP, Plot2DEF, Plot2DOptEF], 'FontWeight', 'bold', 'FontSize' , 16, 'FontName' , 'Times New Roman', 'Location', 'south');
