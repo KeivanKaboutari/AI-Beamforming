@@ -126,8 +126,8 @@ if PointDistributionMethod == 1
     angleSamplingNo = 32;
     [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(angleSamplingNo);
 elseif PointDistributionMethod == 2
-    angleSamplingNo = 0;
     [Theta, Phi] = equiDisPointsOnUpperSphericalCube();
+    angleSamplingNo = length(Theta);
 end
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\Theta.mat', 'Theta');
 save('C:\Users\k.kaboutari\Desktop\New 20220524\Data\Phi.mat', 'Phi');
