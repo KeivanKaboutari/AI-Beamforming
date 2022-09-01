@@ -160,6 +160,8 @@ thetaPhiPhaseWoN = zeros(angleSamplingNo, 2 * L + elementNo, noDesData);
 thetaPhiPhaseWN = zeros(angleSamplingNo, 2 * L + elementNo, noDesData);
 % Theta, Phi, N * M Phases (optimized)
 thetaPhiPhaseOpt = zeros(angleSamplingNo, 2 * L + elementNo, noDesData);
+% N * M Phases (optimized and modified)
+modifiedPhaseOpt = zeros(angleSamplingNo, elementNo, noDesData);
 % Theta, Phi, N * M CRP
 % thetaPhiPatCR = zeros(angleSamplingNo, 2 * L + elementNo, noDesData);
 % Theta, Phi, N * M CRP (normalized)
@@ -881,6 +883,7 @@ for dataSetCounter = 1 : 1 : noDesData
             Text = append(PathText, '\CostValuePerIterTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
             save(Text, 'CostValuePerIter');
             thetaPhiPhaseOpt(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(OptPhase, 1, elementNo);
+            modifiedPhaseOpt(angleCounter, :, dataSetCounter) = reshape(modifiedPhase, 1, elementNo);
             %  thetaPhiPatEOpt(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(PatternE(:, :, NFE), 1, elementNo);
             %  thetaPhiPatEOptNormalized(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(PatternENormalized(:, :, NFE), 1, elementNo);
             thetaPhiPatESmoothedOpt(angleCounter, :, dataSetCounter) = reshape(PatternESmooth(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
@@ -892,7 +895,7 @@ end
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhase.mat', 'modifiedPhase');
+save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
 
 % save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
 % save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
