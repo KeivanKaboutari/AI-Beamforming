@@ -344,7 +344,7 @@ for figureCounter = 1 : 1 : PointsNum
     hold on;
     grid on;
     for dataCounter = 1 : 1 : DataSet
-        plot(1 : 1 : AntennaElements, reshape(transpose(reshape(ModifiedPhaseOpt(figureCounter, :, dataCounter), M, N)), 1, AntennaElements));
+        plot(1 : 1 : AntennaElements, reshape(transpose(reshape(modifiedPhaseOpt(figureCounter, :, dataCounter), M, N)), 1, AntennaElements));
         ylim([-pi pi]);
     end
 end
