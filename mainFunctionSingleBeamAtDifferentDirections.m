@@ -122,11 +122,13 @@ elementNo = N * M;
 % Select point distribution over upper half hemisphere equidistantly
 % 1 for selecting Fibo method and 2 for selecting Cube method
 PointDistributionMethod = 1;
+% Determine max tilt angle for beams [Degree]
+maxTiltAngle = 40;
 if PointDistributionMethod == 1
     angleSamplingNo = 32;
-    [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(angleSamplingNo);
+    [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(angleSamplingNo, maxTiltAngle);
 elseif PointDistributionMethod == 2
-    [Theta, Phi] = equiDisPointsOnUpperSphericalCube();
+    [Theta, Phi] = equiDisPointsOnUpperSphericalCube(maxTiltAngle);
     angleSamplingNo = length(Theta);
 end
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Theta.mat', 'Theta');
