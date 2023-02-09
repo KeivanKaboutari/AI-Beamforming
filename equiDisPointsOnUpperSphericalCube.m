@@ -1,4 +1,4 @@
-function [thetaInRad, phiInRad] = equiDisPointsOnUpperSphericalCube()
+function [thetaInRad, phiInRad] = equiDisPointsOnUpperSphericalCube(maxTiltAngle)
     %% Cube Projection
     
     % Tangent wrap function with parameter Theta.
@@ -8,7 +8,7 @@ function [thetaInRad, phiInRad] = equiDisPointsOnUpperSphericalCube()
     % Optimal value as given in literature
     Theta = 0.8687;
     % Max. value of Theta angle in rad.
-    ThetaMax = 75 * pi / 180;
+    ThetaMax = maxTiltAngle * pi / 180;
     
     % Grid no. over a and b axes
 %     % For 65 Points
