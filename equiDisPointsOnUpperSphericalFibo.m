@@ -1,4 +1,4 @@
-function [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(N)
+function [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(N, maxTiltAngle)
     %% Fibo Method
     % This function distributes N points over the upper part of spherical
     % N is the number of samples which is distributed equidistantly over the upper part of spherical
@@ -10,7 +10,7 @@ function [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(N)
     Fun = @(X, Y) power((2 * Y + 1) / (2 * N), X);
     
     % Max. value of Theta angle in rad.
-    Theta = 75 * pi / 180;
+    Theta = maxTiltAngle * pi / 180;
     determineMaxThetaAngle = cos(Theta);
     % Calculate z axis values
     z = zeros(1, N);
