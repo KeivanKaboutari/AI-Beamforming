@@ -123,7 +123,7 @@ elementNo = N * M;
 % 1 for selecting Fibo method and 2 for selecting Cube method
 PointDistributionMethod = 1;
 % Determine max tilt angle for beams [Degree]
-maxTiltAngle = 40;
+maxTiltAngle = 75;
 if PointDistributionMethod == 1
     angleSamplingNo = 32;
     [Theta, Phi] = equiDisPointsOnUpperSphericalFibo(angleSamplingNo, maxTiltAngle);
