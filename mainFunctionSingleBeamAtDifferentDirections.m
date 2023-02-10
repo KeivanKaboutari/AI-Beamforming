@@ -788,36 +788,35 @@ for dataSetCounter = 1 : 1 : noDesData
                 disp(['Smoothed Opt. Electric Field Max. value for ' num2str(Counter) ' beam is: ' num2str(OptEFSmoothedMAX)]);
             end
             
+            ElemBaseOptPhase = @(y, x) Confine(OptPhase(1 + round(y / d + (N - 1) / 2), 1 + round(x / d + (M - 1) / 2)));
+
+            % Let us caclulate and plot the phase distribution on the MS that realises the given pattern
+            ConfinedElemBaseOptPhase2D = zeros(N, M);
+            for Row = 1 : 1 : N
+                for Column = 1 : 1 : M
+                    ConfinedElemBaseOptPhase2D(Row, Column) = ElemBaseOptPhase(SizeEleY(Row), SizeEleX(Column));
+                end
+            end
+
+            % Determine number of iteration
+            phaseIter = 100;
+
+            % Assign the original phases
+            modifiedPhase = ConfinedElemBaseOptPhase2D;
+
+            % Post-processing on the phase distribution
+            for Counter = 1 : 1 : phaseIter
+                % Take the average from phases and subtract from original ones
+                modifiedPhase = modifiedPhase - mean(modifiedPhase, 'all');
+                ConfinedPhaseModification = Confine(modifiedPhase);
+                if modifiedPhase == ConfinedPhaseModification
+                    break;
+                end
+                modifiedPhase = ConfinedPhaseModification;
+            end
+            
             if OptReskey == 1
                 %% Plot optimized electric field in uv coordinate
-                
-                ElemBaseOptPhase = @(y, x) Confine(OptPhase(1 + round(y / d + (N - 1) / 2), 1 + round(x / d + (M - 1) / 2)));
-                
-                % Let us caclulate and plot the phase distribution on the MS that realises the given pattern
-                ConfinedElemBaseOptPhase2D = zeros(N, M);
-                for Row = 1 : 1 : N
-                    for Column = 1 : 1 : M
-                        ConfinedElemBaseOptPhase2D(Row, Column) = ElemBaseOptPhase(SizeEleY(Row), SizeEleX(Column));
-                    end
-                end
-                
-                % Determine number of iteration
-                phaseIter = 100;
-                
-                % Assign the original phases
-                modifiedPhase = ConfinedElemBaseOptPhase2D;
-                
-                % Post-processing on the phase distribution
-                for Counter = 1 : 1 : phaseIter
-                    % Take the average from phases and subtract from original ones
-                    modifiedPhase = modifiedPhase - mean(modifiedPhase, 'all');
-                    ConfinedPhaseModification = Confine(modifiedPhase);
-                    if modifiedPhase == ConfinedPhaseModification
-                        break;
-                    end
-                    modifiedPhase = ConfinedPhaseModification;
-                end
-                modifiedPhaseOpt(angleCounter, :, dataSetCounter) = reshape(modifiedPhase, 1, elementNo);
                 
                 % Plot phase distribution on MS
                 PlotPhase('2D Optimized Phase Distributaion (Modified)', gridElemBaseX, 'Columns (m)', gridElemBaseY, 'Row (n)', modifiedPhase, 'Element based', ...
@@ -881,6 +880,7 @@ for dataSetCounter = 1 : 1 : noDesData
             Text = append(PathText, '\CostValuePerIterTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
             save(Text, 'CostValuePerIter');
             thetaPhiPhaseOpt(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(OptPhase, 1, elementNo);
+            modifiedPhaseOpt(angleCounter, :, dataSetCounter) = reshape(modifiedPhase, 1, elementNo);
             %  thetaPhiPatEOpt(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(PatternE(:, :, NFE), 1, elementNo);
             %  thetaPhiPatEOptNormalized(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(PatternENormalized(:, :, NFE), 1, elementNo);
             thetaPhiPatESmoothedOpt(angleCounter, :, dataSetCounter) = reshape(PatternESmooth(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
@@ -892,9 +892,8 @@ end
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
-if OptReskey == 1
-    save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
-end
+save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
+
 % save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
 % save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
