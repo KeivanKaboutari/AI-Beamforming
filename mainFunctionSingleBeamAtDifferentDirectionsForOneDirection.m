@@ -782,35 +782,35 @@ for dataSetCounter = 1 : 1 : noDesData
                 disp(['Smoothed Opt. Electric Field Max. value for ' num2str(Counter) ' beam is: ' num2str(OptEFSmoothedMAX)]);
             end
             
+            ElemBaseOptPhase = @(y, x) Confine(OptPhase(1 + round(y / d + (N - 1) / 2), 1 + round(x / d + (M - 1) / 2)));
+
+            % Let us caclulate and plot the phase distribution on the MS that realises the given pattern
+            ConfinedElemBaseOptPhase2D = zeros(N, M);
+            for Row = 1 : 1 : N
+                for Column = 1 : 1 : M
+                    ConfinedElemBaseOptPhase2D(Row, Column) = ElemBaseOptPhase(SizeEleY(Row), SizeEleX(Column));
+                end
+            end
+            
+            % Determine number of iteration
+            phaseIter = 100;
+
+            % Assign the original phases
+            modifiedPhase = ConfinedElemBaseOptPhase2D;
+
+            % Post-processing on the phase distribution
+            for Counter = 1 : 1 : phaseIter
+                % Take the average from phases and subtract from original ones
+                modifiedPhase = modifiedPhase - mean(modifiedPhase, 'all');
+                ConfinedPhaseModification = Confine(modifiedPhase);
+                if modifiedPhase == ConfinedPhaseModification
+                    break;
+                end
+                modifiedPhase = ConfinedPhaseModification;
+            end
+            
             if OptReskey == 1
                 %% Plot optimized electric field in uv coordinate
-                
-                ElemBaseOptPhase = @(y, x) Confine(OptPhase(1 + round(y / d + (N - 1) / 2), 1 + round(x / d + (M - 1) / 2)));
-                
-                % Let us caclulate and plot the phase distribution on the MS that realises the given pattern
-                ConfinedElemBaseOptPhase2D = zeros(N, M);
-                for Row = 1 : 1 : N
-                    for Column = 1 : 1 : M
-                        ConfinedElemBaseOptPhase2D(Row, Column) = ElemBaseOptPhase(SizeEleY(Row), SizeEleX(Column));
-                    end
-                end
-                
-                % Determine number of iteration
-                phaseIter = 100;
-                
-                % Assign the original phases
-                modifiedPhase = ConfinedElemBaseOptPhase2D;
-                
-                % Post-processing on the phase distribution
-                for Counter = 1 : 1 : phaseIter
-                    % Take the average from phases and subtract from original ones
-                    modifiedPhase = modifiedPhase - mean(modifiedPhase, 'all');
-                    ConfinedPhaseModification = Confine(modifiedPhase);
-                    if modifiedPhase == ConfinedPhaseModification
-                        break;
-                    end
-                    modifiedPhase = ConfinedPhaseModification;
-                end
                 
                 % Plot phase distribution on MS
                 PlotPhase('2D Optimized Phase Distributaion (Modified)', gridElemBaseX, 'Columns (m)', gridElemBaseY, 'Row (n)', modifiedPhase, 'Element based', ...
