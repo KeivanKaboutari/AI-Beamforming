@@ -817,6 +817,7 @@ for dataSetCounter = 1 : 1 : noDesData
                     end
                     modifiedPhase = ConfinedPhaseModification;
                 end
+                modifiedPhaseOpt(angleCounter, :, dataSetCounter) = reshape(modifiedPhase, 1, elementNo);
                 
                 % Plot phase distribution on MS
                 PlotPhase('2D Optimized Phase Distributaion (Modified)', gridElemBaseX, 'Columns (m)', gridElemBaseY, 'Row (n)', modifiedPhase, 'Element based', ...
@@ -880,7 +881,6 @@ for dataSetCounter = 1 : 1 : noDesData
             Text = append(PathText, '\CostValuePerIterTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
             save(Text, 'CostValuePerIter');
             thetaPhiPhaseOpt(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(OptPhase, 1, elementNo);
-            modifiedPhaseOpt(angleCounter, :, dataSetCounter) = reshape(modifiedPhase, 1, elementNo);
             %  thetaPhiPatEOpt(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(PatternE(:, :, NFE), 1, elementNo);
             %  thetaPhiPatEOptNormalized(angleCounter, 2 * L + 1 : end, dataSetCounter) = reshape(PatternENormalized(:, :, NFE), 1, elementNo);
             thetaPhiPatESmoothedOpt(angleCounter, :, dataSetCounter) = reshape(PatternESmooth(:, :, NFE), 1, elementNo * SmoothingFactor * SmoothingFactor);
@@ -892,8 +892,9 @@ end
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
-
+if OptReskey == 1
+    save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
+end
 % save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
 % save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
 save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
