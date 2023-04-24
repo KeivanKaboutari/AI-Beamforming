@@ -46,7 +46,7 @@ load('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Futu
 
 % Number of data sets
 DataSet = 1;
-% Number of points per data set
+% Number of points per data set (Number of angle samples)
 PointsNum = 1;
 % Number of antenna elements
 AntennaElements = N * M;
