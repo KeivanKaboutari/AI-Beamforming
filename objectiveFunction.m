@@ -1,4 +1,4 @@
-function ReturnCost = objectiveFunction(randomPhase) %#codegen
+function ReturnCost = objectiveFunction(randomPhase, Lx, Ly) %#codegen
 %% Cost function to minimize Sidelobe Levels (SLL)
 %     global NFE PhaseValuesPerIteration PatternE PatternENormalized PatternESmooth PatternESmoothedNormalized CostValuePerIter;
     global NFE PhaseValuesPerIteration PatternESmooth PatternESmoothedNormalized CostValuePerIter;
@@ -38,7 +38,7 @@ function ReturnCost = objectiveFunction(randomPhase) %#codegen
 %         u = -pi + kValues(kCounter) * 2 * pi / (M - 1);
 %         for lCounter = 1 : 1 : N
 %             v = -pi + lValues(lCounter) * 2 * pi / (N - 1);
-%             AbsElectricField(lCounter, kCounter) = ElecFieldFun(complexPhaseFactor, [u, v]);
+%             AbsElectricField(lCounter, kCounter) = ElecFieldFun(complexPhaseFactor, [u, v], Lx, Ly);
 %         end
 %     end
 %     % Element-base Electrical Field
@@ -53,7 +53,7 @@ function ReturnCost = objectiveFunction(randomPhase) %#codegen
         u = -pi + kValuesSmoothed(kCounter) * 2 * pi / (M - 1);
         for lCounter = 1 : 1 : round(SmoothingFactor * N)
             v = -pi + lValuesSmoothed(lCounter) * 2 * pi / (N - 1);
-            AbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(complexPhaseFactor, [u, v]);
+            AbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(complexPhaseFactor, [u, v], Lx, Ly);
         end
     end
     % Smoothed Electrical Field
@@ -63,9 +63,9 @@ function ReturnCost = objectiveFunction(randomPhase) %#codegen
     PatternESmoothedNormalized(:, :, NFE) = AbsElectricFieldSmoothed(:, :) / PatternESmoothedNormalizedMax;
     
     % Determine cost function and save costs per iteration
-%     AbsElecFieldOutsideProArea = ElecFieldFun(complexPhaseFactor, [FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1)]);
-    AbsElecFieldOutsideProAreaFiltered = ElecFieldFun(complexPhaseFactor, [FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2)]) .* transpose(modifiedGaussianFilter(FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2), 0));
-%     AbsElecFieldOutsideProAreaFiltered = ElecFieldFun(complexPhaseFactor, [FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2)]);
+    % AbsElecFieldOutsideProArea = ElecFieldFun(complexPhaseFactor, [FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1)], Lx, Ly);
+    AbsElecFieldOutsideProAreaFiltered = ElecFieldFun(complexPhaseFactor, [FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2)], Lx, Ly) .* transpose(modifiedGaussianFilter(FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2), 0));
+    % AbsElecFieldOutsideProAreaFiltered = ElecFieldFun(complexPhaseFactor, [FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 1), FixedOutsideSamplingPointsValues(1 : OutsideSamplingPoints, 2)], Lx, Ly);
     EngMaxEF = ceil(AbsElectricFieldSmoothedMax + 5);
 %     AbsElecFieldInsideProArea = zeros(1, InsideSamplingPoints, L);
     AbsElecFieldInsideProAreaFiltered = zeros(1, InsideSamplingPoints, L);
@@ -73,9 +73,9 @@ function ReturnCost = objectiveFunction(randomPhase) %#codegen
 %     InsideProAreaCostFun = zeros(1, L);
     InsideProAreaCostFunFiltered = zeros(1, L);
     for BeamCounter = 1 : 1 : L
-%         AbsElecFieldInsideProArea(:, :, BeamCounter) = ElecFieldFun(complexPhaseFactor, [FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter)]);
-        AbsElecFieldInsideProAreaFiltered(:, :, BeamCounter) = ElecFieldFun(complexPhaseFactor, [FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter)]) .* transpose(modifiedGaussianFilter(FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter), BeamCounter));
-%         AbsElecFieldInsideProAreaFiltered(:, :, BeamCounter) = ElecFieldFun(complexPhaseFactor, [FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter)]);
+        % AbsElecFieldInsideProArea(:, :, BeamCounter) = ElecFieldFun(complexPhaseFactor, [FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter)], Lx, Ly);
+        AbsElecFieldInsideProAreaFiltered(:, :, BeamCounter) = ElecFieldFun(complexPhaseFactor, [FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter)], Lx, Ly) .* transpose(modifiedGaussianFilter(FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter), BeamCounter));
+        % AbsElecFieldInsideProAreaFiltered(:, :, BeamCounter) = ElecFieldFun(complexPhaseFactor, [FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 1, BeamCounter), FixedInsideSamplingPointsValues(1 : InsideSamplingPoints, 2, BeamCounter)], Lx, Ly);
         for PointCounter = 1 : 1 : InsideSamplingPoints
             CRPInsideProArea(1, PointCounter, BeamCounter) = ComplexRadiationPatternUV(FixedInsideSamplingPointsValues(PointCounter, 1, BeamCounter), FixedInsideSamplingPointsValues(PointCounter, 2, BeamCounter));
         end

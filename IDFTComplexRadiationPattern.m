@@ -1,10 +1,10 @@
-function RetSincPatternPhase = IDFTComplexRadiationPattern(ComplexRadiationPattern)
+function RetSincPatternPhase = IDFTComplexRadiationPattern(ComplexRadiationPattern, Lx, Ly)
     %% Inverse Discrete Fourier Transform from complex values and pattern of the antenna
     
     global Rf d k0;
     [N, M] = size(ComplexRadiationPattern);
     
-    Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2) ^ 2 + (m - (M - 1) / 2) ^ 2) * d ^ 2);
+    Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2 + Lx) ^ 2 + (m - (M - 1) / 2) ^ 2 + Ly) * d ^ 2);
     
     mValues = linspace(0, M - 1, M);
     nValues = linspace(0, N - 1, N);

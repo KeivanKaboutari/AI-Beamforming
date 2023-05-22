@@ -1,4 +1,4 @@
-function SphericalPlot3D(FigureName, Zlabel, PatternType)
+function SphericalPlot3D(FigureName, Zlabel, PatternType, Lx, Ly)
     global M N d k0 SmoothingFactor left_color right_color;
 
     % Element number
@@ -53,7 +53,7 @@ function SphericalPlot3D(FigureName, Zlabel, PatternType)
                     uSphCor = k0 * d * Xmn(lCounter, kCounter);
                     vSphCor = k0 * d * Ymn(lCounter, kCounter);
                     % Calculate electrical field
-                    SphCorAbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                    SphCorAbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                 end
             end
             % Scale Xmn, Ymn, and Zmn
@@ -71,7 +71,7 @@ function SphericalPlot3D(FigureName, Zlabel, PatternType)
                     uSphCor = k0 * d * Xmn(lCounter, kCounter);
                     vSphCor = k0 * d * Ymn(lCounter, kCounter);
                     % Calculate electrical field
-                    optAbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                    optAbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                 end
             end
 

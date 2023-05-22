@@ -1,4 +1,4 @@
-function PolarPlot2D(FigureName, Plane, PatternType)
+function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
     % Plane determines to plot which plane
     % PatternType determines to plot CRP (project pattern) or EF or OptEF of all of them
     global M N d k0 SmoothingFactor left_color right_color;
@@ -108,7 +108,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xyXmn(Counter);
                             vSphCor = k0 * d * xyYmn(Counter);
                             % Calculate electrical field
-                            xySphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xySphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         Xaxis = xyXmn .* xySphCorAbsElectricFieldSmoothed;
@@ -126,7 +126,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xyXmn(Counter);
                             vSphCor = k0 * d * xyYmn(Counter);
                             % Calculate electrical field
-                            xySphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xySphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         Xaxis = xyXmn .* xySphCorAbsElectricFieldSmoothedOpt;
@@ -153,7 +153,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xyXmn(Counter);
                             vSphCor = k0 * d * xyYmn(Counter);
                             % Calculate electrical field
-                            xySphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xySphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisEF = xyXmn .* xySphCorAbsElectricFieldSmoothed;
@@ -166,7 +166,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xyXmn(Counter);
                             vSphCor = k0 * d * xyYmn(Counter);
                             % Calculate electrical field
-                            xySphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xySphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisOptEF = xyXmn .* xySphCorAbsElectricFieldSmoothedOpt;
@@ -226,7 +226,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * yzXmn(Counter);
                             vSphCor = k0 * d * yzYmn(Counter);
                             % Calculate electrical field
-                            yzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                            yzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
     %                     yzScXmn = yzXmn .* yzSphCorAbsElectricFieldSmoothed;
@@ -244,7 +244,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * yzXmn(Counter);
                             vSphCor = k0 * d * yzYmn(Counter);
                             % Calculate electrical field
-                            yzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                            yzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
     %                     yzScXmn = yzXmn .* yzSphCorAbsElectricFieldSmoothedOpt;
@@ -270,7 +270,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * yzXmn(Counter);
                             vSphCor = k0 * d * yzYmn(Counter);
                             % Calculate electrical field
-                            yzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                            yzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisEF = yzYmn .* yzSphCorAbsElectricFieldSmoothed;
@@ -283,7 +283,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * yzXmn(Counter);
                             vSphCor = k0 * d * yzYmn(Counter);
                             % Calculate electrical field
-                            yzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                            yzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisOptEF = yzYmn .* yzSphCorAbsElectricFieldSmoothedOpt;
@@ -343,7 +343,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xzXmn(Counter);
                             vSphCor = k0 * d * xzYmn(Counter);
                             % Calculate electrical field
-                            xzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         Xaxis = xzXmn .* xzSphCorAbsElectricFieldSmoothed;
@@ -361,7 +361,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xzXmn(Counter);
                             vSphCor = k0 * d * xzYmn(Counter);
                             % Calculate electrical field
-                            xzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         Xaxis = xzXmn .* xzSphCorAbsElectricFieldSmoothedOpt;
@@ -387,7 +387,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xzXmn(Counter);
                             vSphCor = k0 * d * xzYmn(Counter);
                             % Calculate electrical field
-                            xzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xzSphCorAbsElectricFieldSmoothed(Counter) = ElecFieldFun(ComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisEF = xzXmn .* xzSphCorAbsElectricFieldSmoothed;
@@ -400,7 +400,7 @@ function PolarPlot2D(FigureName, Plane, PatternType)
                             uSphCor = k0 * d * xzXmn(Counter);
                             vSphCor = k0 * d * xzYmn(Counter);
                             % Calculate electrical field
-                            xzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor]);
+                            xzSphCorAbsElectricFieldSmoothedOpt(Counter) = ElecFieldFun(optComplexPhaseFactor, [uSphCor, vSphCor], Lx, Ly);
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisOptEF = xzXmn .* xzSphCorAbsElectricFieldSmoothedOpt;

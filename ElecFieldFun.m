@@ -1,4 +1,4 @@
-function RetAbsElecField = ElecFieldFun(ComplexPhaseFactor, UVPoints)
+function RetAbsElecField = ElecFieldFun(ComplexPhaseFactor, UVPoints, Lx, Ly)
     %% Electric Field Function
     
     global Rf d Lambda;
@@ -13,7 +13,7 @@ function RetAbsElecField = ElecFieldFun(ComplexPhaseFactor, UVPoints)
     
     RetComElecField = zeros(1, SamplingNumber);
     RetAbsElecField = zeros(1, SamplingNumber);
-    Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2) ^ 2 + (m - (M - 1) / 2) ^ 2) * d ^ 2);
+    Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2 + Lx) ^ 2 + (m - (M - 1) / 2 + Ly) ^ 2) * d ^ 2);
     for SampleCounter = 1 : 1 : SamplingNumber   
         for mCounter = 1 : 1 : M
             for nCounter = 1 : 1 : N

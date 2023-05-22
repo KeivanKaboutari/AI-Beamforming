@@ -1,4 +1,4 @@
-function optimizationFunction(stochasticPhase, evaluationNumber, Band)
+function optimizationFunction(stochasticPhase, evaluationNumber, Band, Lx, Ly)
     global NFE PhaseValuesPerIteration optFlag Key Criterion M N;
     solution = [];
     objectiveValue = 0;
@@ -6,7 +6,7 @@ function optimizationFunction(stochasticPhase, evaluationNumber, Band)
 %     ceqcons = [];
     
     % Pass fixed parameters to objfun
-    ObjectiveFunction = @(StochasticPhase) objectiveFunction(StochasticPhase);
+    ObjectiveFunction = @(StochasticPhase) objectiveFunction(StochasticPhase, Lx, Ly);
 %     ConstraintFunction = @(x, y) constraintFunction(x);
     
     % Set nondefault solver options
@@ -31,7 +31,7 @@ function optimizationFunction(stochasticPhase, evaluationNumber, Band)
         Key = Key + 1;
         NFE = 0;
         %% Call Optimization Function
-        OptimizationFunction = @(optimizedPhase, evaluationNumber, Band) optimizationFunction(optimizedPhase, evaluationNumber, Band);
+        OptimizationFunction = @(optimizedPhase, evaluationNumber, Band) optimizationFunction(optimizedPhase, evaluationNumber, Band, Lx, Ly);
         OptimizationFunction(stochasticPhase, evaluationNumber, Band);
         optFlag = 0;
     end

@@ -46,7 +46,7 @@ SAreaKey = 0;
 OptRunKey = 1;
 
 % Plot optimized results
-OptReskey = 0;
+OptReskey = 1;
 
 %% In this example calculation, the time dependence is exp(+i * ω * t), as is generally assumed in electrical engineering.
 % Therefore, when an EM wave propagates along a distance Rad in free space it acquires a phase delay given by the phase factor exp(-i * k0 * Rad),
@@ -57,15 +57,15 @@ OptReskey = 0;
 % Let us define the MS parameters: Rf, M, N, d
 global Rf;
 Rf = 50.000000;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Rf.mat', 'Rf');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Rf.mat', 'Rf');
 % Number of elements in each Columns
 global M;
-M = 10;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\M.mat', 'M');
+M = 13;
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\M.mat', 'M');
 % Number of elements in each Rows
 global N;
-N = 3;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\N.mat', 'N');
+N = 13;
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\N.mat', 'N');
 
 % Operational frequency
 Frequency = 5e9;
@@ -73,7 +73,7 @@ Frequency = 5e9;
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
 Q = 1 / 4;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Q.mat', 'Q');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Q.mat', 'Q');
 
 % Let us define the sinc(x) function as a pattern
 % Let us now define some radiation pattern we want to realize. In particular, it makes sense to consider patterns
@@ -82,16 +82,16 @@ save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Futu
 % Let us define the radiation pattern parameters with L beams:
 global L;
 L = 1;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\L.mat', 'L');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\L.mat', 'L');
 
 % Rad(n, m) is the radial distance from the source antenna to the (m, n)-th element of the MS.
 % d [cm] is the period of the MS (the distance between the centers of its elements), which is the same along x and y axes.
 global d;
 d = 0.68;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\d.mat', 'd');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\d.mat', 'd');
 
 % m and n are scalar values which presents mth and nth element of the metasurface array
-% Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2) ^ 2 + (m - (M - 1) / 2) ^ 2) * d ^ 2);
+% Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2 + Lx) ^ 2 + (m - (M - 1) / 2 + Ly) ^ 2) * d ^ 2);
 
 % Here, F(u, v) is the (arbitrary) radiation pattern function expressed in the reciprocal space with the coordinates
 % u = k0 * d * sin(θ) * cos(φ), v = k0 * d * sin(θ) * sin(φ). Because the far-field radiation pattern
@@ -111,7 +111,7 @@ sy = N / 1;
 % Let us define the free space wavelength (Lambda [cm]) and wavenumber:
 global Lambda;
 Lambda = physconst('LightSpeed') / Frequency * 100;
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Lambda.mat', 'Lambda');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Lambda.mat', 'Lambda');
 global k0;
 k0 = 2 * pi / Lambda;
 
@@ -122,14 +122,25 @@ elementNo = N * M;
 % Select point distribution over upper half hemisphere equidistantly
 % 1 for selecting Fibo method and 2 for selecting Cube method
 angleSamplingNo = 1;
-Theta = -30 * pi / 180;
-Phi = 60 * pi / 180;
+Theta = 40 * pi / 180;
+Phi = 0 * pi / 180;
 
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Theta.mat', 'Theta');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Phi.mat', 'Phi');
+% The tilt angle of the illuminator/source antenna when phi is zero (between 0 and 90) [deg.]
+thetaSource = 10;
+% Rotation of the tilted angle by phi for illuminator/source antenna (between 0 0 to 360) [deg.]
+phiSource = -10;
+
+% Convert the angles to distance regarding period of the surface
+Lx = Rf * tan(pi * phiSource / 180) / d;
+Ly = Rf * tan(pi * thetaSource / 180) / d;
+
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Theta.mat', 'Theta');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Phi.mat', 'Phi');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaSource.mat', 'thetaSource');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\phiSource.mat', 'phiSource');
 
 % Number of desired data sets
-noDesData = 100;
+noDesData = 1;
 
 % Smoothing Factor to make patterns more smoother
 global SmoothingFactor;
@@ -297,7 +308,7 @@ for dataSetCounter = 1 : 1 : noDesData
     Ub = 1 / 2;
     % Generate noise
     Noise = Lb + (Ub - Lb) .* rand(N, M);
-    Text = append('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\dataSet', num2str(dataSetCounter), 'Noise', '.mat');
+    Text = append('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\dataSet', num2str(dataSetCounter), 'Noise', '.mat');
     save(Text, 'Noise');
     
     for angleCounter = 1 : 1 : angleSamplingNo
@@ -305,7 +316,7 @@ for dataSetCounter = 1 : 1 : noDesData
         NFE = 0;
         
         % Determine a new path for saving data
-        PathText = append('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\noDesData', num2str(dataSetCounter), 'Theta', num2str(angleCounter), ', ', num2str(Theta(angleCounter)), ' and Phi', num2str(angleCounter), ', ', num2str(Phi(angleCounter)));
+        PathText = append('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\noDesData', num2str(dataSetCounter), 'Theta', num2str(angleCounter), ', ', num2str(Theta(angleCounter)), ' and Phi', num2str(angleCounter), ', ', num2str(Phi(angleCounter)));
         mkdir(PathText);
         
         % Beam directions and states (u = k0 * d * sin(θ) * cos(φ), v = k0 * d * sin(θ) * sin(φ)) (Example: (0, 0) is at the center and perpendicular)
@@ -345,7 +356,7 @@ for dataSetCounter = 1 : 1 : noDesData
             
             % Plot 2D and 3D complex value of radiation pattern in xy
             % Arguments are (FigureName, Xaxis, Xlabel, Yaxis, Ylabel, Zvalue, Zlabel)
-            Plot2Dand3D('Sample Pattern per Element', ElemBaseX, 'Columns', ElemBaseY, 'Rows', ComplexRP, '|C(u,v)|', ComplexRPMax, [1, 1], [0, 0], 0);
+            Plot2Dand3D('Sample Pattern per Element', ElemBaseX, 'Columns', ElemBaseY, 'Rows', ComplexRP, '|C(u,v)|', ComplexRPMax, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Print the max values of complex value of radiation pattern
             for Counter = 1 : 1 : L
@@ -400,24 +411,24 @@ for dataSetCounter = 1 : 1 : noDesData
         if SCRPKey == 1
             % Plot smoothed 2D and 3D complex value of radiation pattern in xy and uv space
             % Arguments are (FigureName, Xaxis, Xlabel, Yaxis, Ylabel, Zvalue, Zlabel)
-            Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0);
+            Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Smoothed complex radiation pattern in spherical coordinate
-            SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP');
+            SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP', Lx, Ly);
             
             % Plot of smoothed CRP in the xy-plane (Theta = 90 deg) calculated in polar system
-            PolarPlot2D('Project pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'CRP');
+            PolarPlot2D('Project pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'CRP', Lx, Ly);
             
             % Plot of smoothed CRP in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-            PolarPlot2D('Project pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'CRP');
+            PolarPlot2D('Project pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'CRP', Lx, Ly);
             
             % Plot of smoothed CRP in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-            PolarPlot2D('Project pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'CRP');
+            PolarPlot2D('Project pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'CRP', Lx, Ly);
         end
         
         %% =============================================================================================================================================================================================
         %% Inverse Discrete Fourier Transform from complex values and pattern of the antenna
-        SincPatternPhase = IDFTComplexRadiationPattern(ComplexRP);
+        SincPatternPhase = IDFTComplexRadiationPattern(ComplexRP, Lx, Ly);
         
         % Confine Function is confining the phase within the [-pi, pi] interval.
         Confine = @(x) pi - mod(pi - x, 2 * pi);
@@ -482,7 +493,7 @@ for dataSetCounter = 1 : 1 : noDesData
                 for lCounter = 1 : 1 : N
                     v = -pi + lValues(lCounter) * 2 * pi / (N - 1);
                     % v = 2 * k0 * d * (lValues(kCounter) - (N - 1) / 2) / (N - 1);
-                    AbsElectricField(lCounter, kCounter) = ElecFieldFun(ComplexPhaseFactor, [u, v]);
+                    AbsElectricField(lCounter, kCounter) = ElecFieldFun(ComplexPhaseFactor, [u, v], Lx, Ly);
                 end
             end
             
@@ -494,7 +505,7 @@ for dataSetCounter = 1 : 1 : noDesData
 %             thetaPhiPatENormalized(angleCounter, 2 * L + 1 : 2 * L + elementNo, dataSetCounter) = reshape(AbsElectricField ./ ElemBaseElectricFieldMax, 1, elementNo);
             
             % Plot electric field in xy coordinate
-            Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (Element Base)', ElemBaseX, 'Columns', ElemBaseY, 'Rows', AbsElectricField, '|E(u,v)|', ElemBaseElectricFieldMax, [1, 1], [0, 0], 0);
+            Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (Element Base)', ElemBaseX, 'Columns', ElemBaseY, 'Rows', AbsElectricField, '|E(u,v)|', ElemBaseElectricFieldMax, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Print the max values of Electric Field
             for Counter = 1 : 1 : L
@@ -503,7 +514,7 @@ for dataSetCounter = 1 : 1 : noDesData
                 disp('=====================================================================');
                 disp(['Electric Field Max. direction for ' num2str(Counter) ' beam is (u, x, Column (M)): ' num2str(SizeEleX(MaxXLoc(Counter)))]);
                 disp(['Electric Field Max. direction for ' num2str(Counter) ' beam is (v, y, Row (N)): ' num2str(SizeEleY(MaxYLoc(Counter)))]);
-                disp(['Electric Field Max. value for ' num2str(Counter) ' beam is: ' num2str(ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshX(MaxXLoc(Counter)), MaxLocUVBaseMeshY(MaxYLoc(Counter))]))]);
+                disp(['Electric Field Max. value for ' num2str(Counter) ' beam is: ' num2str(ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshX(MaxXLoc(Counter)), MaxLocUVBaseMeshY(MaxYLoc(Counter))], Lx, Ly))]);
             end
         end
         
@@ -515,7 +526,7 @@ for dataSetCounter = 1 : 1 : noDesData
             for lCounter = 1 : 1 : round(SmoothingFactor * N)
                 v = -pi + lValuesSmoothed(lCounter) * 2 * pi / (N - 1);
                 % v = 2 * k0 * d * (lValuesSmoothed(lCounter) - (N - 1) / 2) / (N - 1);
-                AbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(ComplexPhaseFactor, [u, v]);
+                AbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(ComplexPhaseFactor, [u, v], Lx, Ly);
             end
         end
         
@@ -530,7 +541,7 @@ for dataSetCounter = 1 : 1 : noDesData
             BeamMaxEF(Counter) = max(BeamMatEF(:, :, Counter), [], 'all');
             
             Text = append(PathText, '\EFMaxSmoothedTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
-%             EFSmoothedMAX = ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshYSmoothed(MaxYLoc(Counter)), MaxLocUVBaseMeshXSmoothed(MaxXLoc(Counter))]);
+            % EFSmoothedMAX = ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshYSmoothed(MaxYLoc(Counter)), MaxLocUVBaseMeshXSmoothed(MaxXLoc(Counter))], Lx, Ly);
             EFSmoothedMAX = BeamMaxEF(Counter);
             save(Text, 'EFSmoothedMAX');
 %             if EFSmoothedMAX > AbsElectricFieldSmoothedMax
@@ -605,19 +616,19 @@ for dataSetCounter = 1 : 1 : noDesData
         
         if SEFieldKey == 1
             % Plot electric field in uv coordinate
-            Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', AbsElectricFieldSmoothed, '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0);
+            Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', AbsElectricFieldSmoothed, '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0, Lx, Ly);
             
             % Smoothed electrical field in spherical coordinate
-            SphericalPlot3D('Electrical field in spherical space', 'Normalized |E(x,y)|', 'EP');
+            SphericalPlot3D('Electrical field in spherical space', 'Normalized |E(x,y)|', 'EP', Lx, Ly);
             
             % Plot of electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
-            PolarPlot2D('Electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'EP');
+            PolarPlot2D('Electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'EP', Lx, Ly);
             
             % Plot of electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-            PolarPlot2D('Electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'EP');
+            PolarPlot2D('Electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'EP', Lx, Ly);
             
             % Plot of electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-            PolarPlot2D('Electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'EP');
+            PolarPlot2D('Electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'EP', Lx, Ly);
         end
         
         %% Equidistant distribution of sampling points
@@ -652,7 +663,7 @@ for dataSetCounter = 1 : 1 : noDesData
                 if PA{Counter}(OutsidePAPotentialUPoints(PointCounter), OutsidePAPotentialVPoints(PointCounter)) < 0
                     Flag = 0;
         %             InsideProtectedAreaScatteredPointsCounter = InsideProtectedAreaScatteredPointsCounter + 1;
-        %             InsideProtectedAreaScatteredPointsProperties(InsideProtectedAreaScatteredPointsCounter, :) = [InsidePAPotentialUPoints(PointCounter), InsidePAPotentialVPoints(PointCounter), ElecFieldFun(ComplexPhaseFactor, [InsidePAPotentialUPoints(PointCounter), InsidePAPotentialVPoints(PointCounter)])];
+                    % InsideProtectedAreaScatteredPointsProperties(InsideProtectedAreaScatteredPointsCounter, :) = [InsidePAPotentialUPoints(PointCounter), InsidePAPotentialVPoints(PointCounter), ElecFieldFun(ComplexPhaseFactor, [InsidePAPotentialUPoints(PointCounter), InsidePAPotentialVPoints(PointCounter)], Lx, Ly)];
                     break;
                 end
             end
@@ -660,20 +671,20 @@ for dataSetCounter = 1 : 1 : noDesData
             if Flag == 1
                 OutsideProtectedAreaScatteredPointsCounter = OutsideProtectedAreaScatteredPointsCounter + 1;
                 % Position order (X, Y, Z)
-%                 OutsideProtectedAreaScatteredPointsProperties(OutsideProtectedAreaScatteredPointsCounter, :) = [OutsidePAPotentialVPoints(PointCounter), OutsidePAPotentialUPoints(PointCounter), ElecFieldFun(ComplexPhaseFactor, [OutsidePAPotentialUPoints(PointCounter), OutsidePAPotentialVPoints(PointCounter)])];
+                % OutsideProtectedAreaScatteredPointsProperties(OutsideProtectedAreaScatteredPointsCounter, :) = [OutsidePAPotentialVPoints(PointCounter), OutsidePAPotentialUPoints(PointCounter), ElecFieldFun(ComplexPhaseFactor, [OutsidePAPotentialUPoints(PointCounter), OutsidePAPotentialVPoints(PointCounter)], Lx, Ly)];
                 OutsideProtectedAreaScatteredPointsProperties(OutsideProtectedAreaScatteredPointsCounter, :) = [OutsidePAPotentialUPoints(PointCounter), OutsidePAPotentialVPoints(PointCounter)];
             end
         end
         
         % Getting samples from edges of the metasurface for outside of protected area
         for Ucounter = 1 : 1 : length(MaxLocUVBaseMeshXSmoothed) - 2
-            UandVNeg(Ucounter, :) = [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(1), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(1)])];
-            UandVPos(Ucounter, :) = [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(length(MaxLocUVBaseMeshYSmoothed)), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(length(MaxLocUVBaseMeshYSmoothed))])];
+            UandVNeg(Ucounter, :) = [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(1), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(1)], Lx, Ly)];
+            UandVPos(Ucounter, :) = [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(length(MaxLocUVBaseMeshYSmoothed)), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(Ucounter + 1), MaxLocUVBaseMeshYSmoothed(length(MaxLocUVBaseMeshYSmoothed))], Lx, Ly)];
         end
         
         for Vcounter = 1 : 1 : length(MaxLocUVBaseMeshYSmoothed)
-            VandUNeg(Vcounter, :) = [MaxLocUVBaseMeshXSmoothed(1), MaxLocUVBaseMeshYSmoothed(Vcounter), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(1), MaxLocUVBaseMeshYSmoothed(Vcounter)])];
-            VandUPos(Vcounter, :) = [MaxLocUVBaseMeshXSmoothed(length(MaxLocUVBaseMeshXSmoothed)), MaxLocUVBaseMeshYSmoothed(Vcounter), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(length(MaxLocUVBaseMeshXSmoothed)), MaxLocUVBaseMeshYSmoothed(Vcounter)])];
+            VandUNeg(Vcounter, :) = [MaxLocUVBaseMeshXSmoothed(1), MaxLocUVBaseMeshYSmoothed(Vcounter), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(1), MaxLocUVBaseMeshYSmoothed(Vcounter)], Lx, Ly)];
+            VandUPos(Vcounter, :) = [MaxLocUVBaseMeshXSmoothed(length(MaxLocUVBaseMeshXSmoothed)), MaxLocUVBaseMeshYSmoothed(Vcounter), ElecFieldFun(ComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(length(MaxLocUVBaseMeshXSmoothed)), MaxLocUVBaseMeshYSmoothed(Vcounter)], Lx, Ly)];
         end
         
         % Sampling points values (E values) regarding fixed sampling points (location) (% Omit the NaN values from outside sampling points)
@@ -701,7 +712,7 @@ for dataSetCounter = 1 : 1 : noDesData
             for PointCounter = 1 : PointCounterSamplingStep : ApproximateScatteringPointNumberInsidePA
                 if PA{Counter}(InsidePAPotentialUPointsEachBeam(PointCounter, Counter), InsidePAPotentialVPointsEachBeam(PointCounter, Counter)) <= 0
                     InsideProtectedAreaScatteredPointsCounter(1, Counter) = InsideProtectedAreaScatteredPointsCounter(1, Counter) + 1;
-                    InsideProtectedAreaScatteredPointsPropertiesWithNaN(InsideProtectedAreaScatteredPointsCounter(1, Counter), :, Counter) = [InsidePAPotentialUPointsEachBeam(PointCounter, Counter), InsidePAPotentialVPointsEachBeam(PointCounter, Counter), ElecFieldFun(ComplexPhaseFactor, [InsidePAPotentialUPointsEachBeam(PointCounter, Counter), InsidePAPotentialVPointsEachBeam(PointCounter, Counter)])];
+                    InsideProtectedAreaScatteredPointsPropertiesWithNaN(InsideProtectedAreaScatteredPointsCounter(1, Counter), :, Counter) = [InsidePAPotentialUPointsEachBeam(PointCounter, Counter), InsidePAPotentialVPointsEachBeam(PointCounter, Counter), ElecFieldFun(ComplexPhaseFactor, [InsidePAPotentialUPointsEachBeam(PointCounter, Counter), InsidePAPotentialVPointsEachBeam(PointCounter, Counter)], Lx, Ly)];
                 end
             end
         end
@@ -723,7 +734,7 @@ for dataSetCounter = 1 : 1 : noDesData
         if SAreaKey == 1
             % Plot the protected areas and sampling points
             % Let us calculate and plot 2D and 3D far-field radiation patterns produced by the MS.
-            Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', AbsElectricFieldSmoothed, '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [1, 1], 1);
+            Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', AbsElectricFieldSmoothed, '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [1, 1], 1, Lx, Ly);
         end
         
         %% =============================================================================================================================================================================================
@@ -753,7 +764,7 @@ for dataSetCounter = 1 : 1 : noDesData
             %% Call Optimization Function
             optFlag = 0;
             Key = 0;
-            OptimizationFunction = @(optimizedPhase, evaluationNumber, Band) optimizationFunction(optimizedPhase, evaluationNumber, Band);
+            OptimizationFunction = @(optimizedPhase, evaluationNumber, Band) optimizationFunction(optimizedPhase, evaluationNumber, Band, Lx, Ly);
             
             OptimizationFunction(stochasticPhase, evaluationNumber, Band);
             
@@ -770,7 +781,7 @@ for dataSetCounter = 1 : 1 : noDesData
                 [ValY(Counter), MaxYLoc(Counter)] = min(abs(MaxLocUVBaseMeshYSmoothed - v0(Counter)));
                 
                 Text = append(PathText, '\OptEFMaxSmoothedTheta', num2str(angleCounter), 'Phi', num2str(angleCounter), '.mat');
-                OptEFSmoothedMAX = ElecFieldFun(optComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(MaxXLoc), MaxLocUVBaseMeshYSmoothed(MaxYLoc)]);
+                OptEFSmoothedMAX = ElecFieldFun(optComplexPhaseFactor, [MaxLocUVBaseMeshXSmoothed(MaxXLoc), MaxLocUVBaseMeshYSmoothed(MaxYLoc)], Lx, Ly);
                 save(Text, 'OptEFSmoothedMAX');
                 if OptEFSmoothedMAX > optAbsElectricFieldSmoothedMax
                     optAbsElectricFieldSmoothedMax = OptEFSmoothedMAX;
@@ -783,7 +794,7 @@ for dataSetCounter = 1 : 1 : noDesData
             end
             
             ElemBaseOptPhase = @(y, x) Confine(OptPhase(1 + round(y / d + (N - 1) / 2), 1 + round(x / d + (M - 1) / 2)));
-
+            
             % Let us caclulate and plot the phase distribution on the MS that realises the given pattern
             ConfinedElemBaseOptPhase2D = zeros(N, M);
             for Row = 1 : 1 : N
@@ -794,10 +805,10 @@ for dataSetCounter = 1 : 1 : noDesData
             
             % Determine number of iteration
             phaseIter = 100;
-
+            
             % Assign the original phases
             modifiedPhase = ConfinedElemBaseOptPhase2D;
-
+            
             % Post-processing on the phase distribution
             for Counter = 1 : 1 : phaseIter
                 % Take the average from phases and subtract from original ones
@@ -833,7 +844,7 @@ for dataSetCounter = 1 : 1 : noDesData
                     for lCounter = 1 : 1 : round(SmoothingFactor * N)
                         v = -pi + lValuesSmoothed(lCounter) * 2 * pi / (N - 1);
                         %  v = 2 * k0 * d * (lValuesSmoothed(lCounter) - (N - 1) / 2) / (N - 1);
-                        optAbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(optComplexPhaseFactor, [u, v]);
+                        optAbsElectricFieldSmoothed(lCounter, kCounter) = ElecFieldFun(optComplexPhaseFactor, [u, v], Lx, Ly);
                     end
                 end
                 
@@ -842,28 +853,28 @@ for dataSetCounter = 1 : 1 : noDesData
                 optAbsElectricFieldSmoothedMax = max(optAbsElectricFieldSmoothed(centerDistance < visibleAreaRadius));
 
                 % Plot 2D and 3D Optimized Far-Field Radiation Pattern in uv-Base
-                Plot2Dand3D('2D and 3D Optimized Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', optAbsElectricFieldSmoothed, '|E_{Opt.}(u,v)|', optAbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0);
+                Plot2Dand3D('2D and 3D Optimized Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', optAbsElectricFieldSmoothed, '|E_{Opt.}(u,v)|', optAbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0, Lx, Ly);
                 
                 % Smoothed optimized electrical field in spherical coordinate
-                SphericalPlot3D('Optimized electrical field in spherical space', 'Normalized |E_{Opt.}(x,y)|', 'OptEP');
+                SphericalPlot3D('Optimized electrical field in spherical space', 'Normalized |E_{Opt.}(x,y)|', 'OptEP', Lx, Ly);
                 
                 % Plot of optimized electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'OptEP');
+                PolarPlot2D('Optimized electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'OptEP', Lx, Ly);
                 
                 % Plot of optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'OptEP');
+                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'OptEP', Lx, Ly);
                 
                 % Plot of optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'OptEP');
+                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'OptEP', Lx, Ly);
                 
                 % Plot of smoothed CRP, EF, and OptEF in the xy-plane (Theta = 90 deg) calculated in polar system
-                PolarPlot2D('Project pattern, EF, and OptEF in the xy-plane (Theta = 90 deg)', 'xy-plane', 'All');
+                PolarPlot2D('Project pattern, EF, and OptEF in the xy-plane (Theta = 90 deg)', 'xy-plane', 'All', Lx, Ly);
                 
                 % Plot of smoothed CRP, EF, and OptEF in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'All');
+                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'All', Lx, Ly);
                 
                 % Plot of smoothed CRP, EF, and OptEF in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'All');
+                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'All', Lx, Ly);
             end
             
             % Save data
@@ -883,26 +894,26 @@ for dataSetCounter = 1 : 1 : noDesData
     end
 end
 
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
 
-% save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
-% save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatCRSmoothedNormalized.mat', 'thetaPhiPatCRSmoothedNormalized');
+% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatCR.mat', 'thetaPhiPatCR');
+% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatCRSmoothedNormalized.mat', 'thetaPhiPatCRSmoothedNormalized');
 
 
-% save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatE.mat', 'thetaPhiPatE');
-% save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatENormalized.mat', 'thetaPhiPatENormalized');
-% save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatEOpt.mat', 'thetaPhiPatEOpt');
-% save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatEOptNormalized.mat', 'thetaPhiPatEOptNormalized');
+% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatE.mat', 'thetaPhiPatE');
+% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatENormalized.mat', 'thetaPhiPatENormalized');
+% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatEOpt.mat', 'thetaPhiPatEOpt');
+% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatEOptNormalized.mat', 'thetaPhiPatEOptNormalized');
 
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatESmoothed.mat', 'thetaPhiPatESmoothed');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatESmoothedNormalized.mat', 'thetaPhiPatESmoothedNormalized');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatESmoothedOpt.mat', 'thetaPhiPatESmoothedOpt');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\thetaPhiPatESmoothedOptNormalized.mat', 'thetaPhiPatESmoothedOptNormalized');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatESmoothed.mat', 'thetaPhiPatESmoothed');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatESmoothedNormalized.mat', 'thetaPhiPatESmoothedNormalized');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatESmoothedOpt.mat', 'thetaPhiPatESmoothedOpt');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\thetaPhiPatESmoothedOptNormalized.mat', 'thetaPhiPatESmoothedOptNormalized');
 
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Coeff1.mat', 'Coeff1');
-save('C:\Users\k.kaboutari\Desktop\Intelligent Beamforming Metasurfaces for Future Telecommunications (MATLAB Codes)\Data\Coeff2.mat', 'Coeff2');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\Coeff1.mat', 'Coeff1');
+save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\Coeff2.mat', 'Coeff2');
