@@ -761,7 +761,6 @@ for dataSetCounter = 1 : 1 : noDesData
             % Determine Boundaries (Declare Band Properties)
             % Bands Order are Lower and Upper
             Property.Lower = [];
-            % Velocities Order are VelWi, VelHis and VelWis
             Property.Upper = [];
             Band = repmat(Property, 1, 1);
             clear Property;
