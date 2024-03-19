@@ -60,11 +60,11 @@ Rf = 50.000000;
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Rf.mat', 'Rf');
 % Number of elements in each Columns
 global M;
-M = 13;
+M = 10;
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\M.mat', 'M');
 % Number of elements in each Rows
 global N;
-N = 13;
+N = 3;
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\N.mat', 'N');
 
 % Operational frequency
@@ -72,7 +72,8 @@ Frequency = 5e9;
 
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
-Q = 1 / 4;
+Q = 1 / sqrt(2);
+
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Q.mat', 'Q');
 
 % Let us define the sinc(x) function as a pattern
@@ -122,13 +123,13 @@ elementNo = N * M;
 % Select point distribution over upper half hemisphere equidistantly
 % 1 for selecting Fibo method and 2 for selecting Cube method
 angleSamplingNo = 1;
-Theta = 40 * pi / 180;
-Phi = 0 * pi / 180;
+Theta = 60.2 * pi / 180;
+Phi = 221.1 * pi / 180;
 
 % The tilt angle of the illuminator/source antenna when phi is zero (between 0 and 90) [deg.]
-thetaSource = 10;
+thetaSource = 0;
 % Rotation of the tilted angle by phi for illuminator/source antenna (between 0 0 to 360) [deg.]
-phiSource = -10;
+phiSource = 0;
 
 % Convert the angles to distance regarding period of the surface
 Lx = Rf * tan(pi * phiSource / 180) / d;
@@ -144,7 +145,7 @@ noDesData = 1;
 
 % Smoothing Factor to make patterns more smoother
 global SmoothingFactor;
-SmoothingFactor = 5;
+SmoothingFactor = 10;
 
 % Get values around the u0 and v0 to find main beams amplitude
 DistanceFromCenter = 4;
@@ -350,6 +351,8 @@ for dataSetCounter = 1 : 1 : noDesData
 %         ComplexRPSmoothed = ComplexRadiationPatternOld(kValuesSmoothed, lValuesSmoothed);
         ComplexRP = abs(ComplexRadiationPattern(2 * pi * (kValues - (M - 1) / 2) / (M - 1), 2 * pi * (lValues - (N - 1) / 2) / (N - 1)));
         ComplexRPSmoothed = abs(ComplexRadiationPattern(2 * pi * (kValuesSmoothed - (M - 1) / 2) / (M - 1), 2 * pi * (lValuesSmoothed - (N - 1) / 2) / (N - 1)));
+        % ComplexRP = abs(ComplexRadiationPattern(UVBaseMeshX, UVBaseMeshY));
+        % ComplexRPSmoothed = abs(ComplexRadiationPattern(UVBaseMeshXSmoothed, UVBaseMeshYSmoothed));
         
         if NCRPKey == 1
             ComplexRPMax = max(ComplexRP, [], 'all');
@@ -411,7 +414,7 @@ for dataSetCounter = 1 : 1 : noDesData
         if SCRPKey == 1
             % Plot smoothed 2D and 3D complex value of radiation pattern in xy and uv space
             % Arguments are (FigureName, Xaxis, Xlabel, Yaxis, Ylabel, Zvalue, Zlabel)
-            Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
+            Plot2Dand3D('Sample Pattern in uv-space', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Smoothed complex radiation pattern in spherical coordinate
             SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP', Lx, Ly);
@@ -582,8 +585,8 @@ for dataSetCounter = 1 : 1 : noDesData
         % DetJacValue = double(subs(DetJac, Vector, ThetaPhiValues));
         
         % Apply scalling to the sinc function (Defining protected area)
-        ScaleduHPBWatOrigin = uHPBWatOrigin * 2 / sx;
-        ScaledvHPBWatOrigin = vHPBWatOrigin * 2 / sy;
+        ScaleduHPBWatOrigin = uHPBWatOrigin * 2 * pi / sx;
+        ScaledvHPBWatOrigin = vHPBWatOrigin * 2 * pi / sy;
 
         % Determine bigger raduis to generate sampling points inside the protected areas (Elleptic)
         if ScaleduHPBWatOrigin >= ScaledvHPBWatOrigin

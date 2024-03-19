@@ -1,7 +1,7 @@
 clear all;
 close all;
 clc;
-tic;
+
 %% Define global varibales
 
 % Number of cost function evaluation (NFE)
@@ -28,7 +28,7 @@ global PatternESmooth PatternESmoothedNormalized;
 NCRPKey = 0;
 
 % Plot smoothed Complex Radiation Pattern
-SCRPKey = 0;
+SCRPKey = 1;
 
 % Plot phase distribution
 PhaseKey = 0;
@@ -37,10 +37,10 @@ PhaseKey = 0;
 NEFieldKey = 0;
 
 % Plot smoothed electric field
-SEFieldKey = 0;
+SEFieldKey = 1;
 
 % Plot sampling area
-SAreaKey = 0;
+SAreaKey = 1;
 
 % Run optmization
 OptRunKey = 1;
@@ -60,19 +60,19 @@ Rf = 50.000000;
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Rf.mat', 'Rf');
 % Number of elements in each Columns
 global M;
-M = 13;
+M = 10;
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\M.mat', 'M');
 % Number of elements in each Rows
 global N;
-N = 13;
+N = 3;
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\N.mat', 'N');
 
 % Operational frequency
-Frequency = 5e9;
+Frequency = 10e9;
 
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
-Q = 1 / 4;
+Q = 1 / sqrt(2);
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Q.mat', 'Q');
 
 % Let us define the sinc(x) function as a pattern
@@ -87,7 +87,7 @@ save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\L.mat', 'L');
 % Number of angles for constructing beams in arbitrary directions
 % Such as combination of Theta = [50, 25, 0, 25, 50] and Phi = [90, 90, 0, -90, -90] ==> {[Theta1, Phi1], [Theta2, Phi2], [Theta3, Phi3], [Theta4, Phi4], [Theta5, Phi5]}
 % ThetaPhiBeams = {[55, 0], [20, 0], [10, 0], [20, 180], [55, 180], [25, 45], [25, 225]};
-ThetaPhiBeams = {[35, 0], [-30, 0]};
+ThetaPhiBeams = {[30, 45], [30, 225]};
 
 % Rad(n, m) is the radial distance from the source antenna to the (m, n)-th element of the MS.
 % d [cm] is the period of the MS (the distance between the centers of its elements), which is the same along x and y axes.
@@ -124,9 +124,9 @@ k0 = 2 * pi / Lambda;
 elementNo = N * M;
 
 % The tilt angle of the illuminator/source antenna when phi is zero (between 0 and 90) [deg.]
-thetaSource = 10;
+thetaSource = 0;
 % Rotation of the tilted angle by phi for illuminator/source antenna (between 0 0 to 360) [deg.]
-phiSource = -10;
+phiSource = 0;
 
 % Convert the angles to distance regarding period of the surface
 Lx = Rf * tan(pi * phiSource / 180) / d;
@@ -157,7 +157,7 @@ noDesData = 1;
 
 % Smoothing Factor to make patterns more smoother
 global SmoothingFactor;
-SmoothingFactor = 5;
+SmoothingFactor = 10;
 
 % Get values around the u0 and v0 to find main beams amplitude
 DistanceFromCenter = 4;
@@ -425,7 +425,7 @@ for dataSetCounter = 1 : 1 : noDesData
         if SCRPKey == 1
             % Plot smoothed 2D and 3D complex value of radiation pattern in xy and uv space
             % Arguments are (FigureName, Xaxis, Xlabel, Yaxis, Ylabel, Zvalue, Zlabel)
-            Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
+            Plot2Dand3D('Sample Pattern in uv-space', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Smoothed complex radiation pattern in spherical coordinate
             SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP', Lx, Ly);
@@ -596,8 +596,8 @@ for dataSetCounter = 1 : 1 : noDesData
         % DetJacValue = double(subs(DetJac, Vector, ThetaPhiValues));
         
         % Apply scalling to the sinc function (Defining protected area)
-        ScaleduHPBWatOrigin = uHPBWatOrigin * 2 / sx;
-        ScaledvHPBWatOrigin = vHPBWatOrigin * 2 / sy;
+        ScaleduHPBWatOrigin = uHPBWatOrigin * 2 * pi / sx;
+        ScaledvHPBWatOrigin = vHPBWatOrigin * 2 * pi / sy;
 
         % Determine bigger raduis to generate sampling points inside the protected areas (Elleptic)
         if ScaleduHPBWatOrigin >= ScaledvHPBWatOrigin
@@ -927,4 +927,3 @@ save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\theta
 
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\Coeff1.mat', 'Coeff1');
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Final Results\Coeff2.mat', 'Coeff2');
-toc;

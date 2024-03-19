@@ -72,7 +72,7 @@ Frequency = 5e9;
 
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
-Q = 1 / 4;
+Q = 1 / sqrt(2);
 save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Q.mat', 'Q');
 
 % Let us define the sinc(x) function as a pattern
@@ -418,7 +418,7 @@ for dataSetCounter = 1 : 1 : noDesData
         if SCRPKey == 1
             % Plot smoothed 2D and 3D complex value of radiation pattern in xy and uv space
             % Arguments are (FigureName, Xaxis, Xlabel, Yaxis, Ylabel, Zvalue, Zlabel)
-            Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
+            Plot2Dand3D('Sample Pattern in uv-space', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Smoothed complex radiation pattern in spherical coordinate
             SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP', Lx, Ly);
@@ -589,8 +589,8 @@ for dataSetCounter = 1 : 1 : noDesData
         % DetJacValue = double(subs(DetJac, Vector, ThetaPhiValues));
         
         % Apply scalling to the sinc function (Defining protected area)
-        ScaleduHPBWatOrigin = uHPBWatOrigin * 2 / sx;
-        ScaledvHPBWatOrigin = vHPBWatOrigin * 2 / sy;
+        ScaleduHPBWatOrigin = uHPBWatOrigin * 2 * pi / sx;
+        ScaledvHPBWatOrigin = vHPBWatOrigin * 2 * pi / sy;
 
         % Determine bigger raduis to generate sampling points inside the protected areas (Elleptic)
         if ScaleduHPBWatOrigin >= ScaledvHPBWatOrigin
