@@ -210,7 +210,7 @@ save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Beam1Phi0Theta40Data1Ele
 %% Plot results related to the project pattern
 % Plot 2D and 3d complex value of radiation pattern in xy and uv space
 ComplexRPMaxSmoothed = max(transpose(loadedCRSmoothed), [], 'all');
-Plot2Dand3D('Sample Pattern in uv-space', gridUVBaseXSmoothed, 'u-axis', gridUVBaseYSmoothed, 'v-axis', loadedCRSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0);
+Plot2Dand3D('Sample Pattern in uv-space', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', loadedCRSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0);
 % Smoothed complex radiation pattern in spherical coordinate
 SphericalPlot3D('Complex radiation pattern in spherical space', '|C(x,y)|', 'CRP');
 % Plot of smoothed CRP in the xy-plane (Theta = 90 deg) calculated in polar system
