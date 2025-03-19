@@ -1,4 +1,4 @@
-function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
+function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly, amp, phase)
     % Plane determines to plot which plane
     % PatternType determines to plot CRP (project pattern) or EF or OptEF of all of them
     global M N d k0 SmoothingFactor left_color right_color;
@@ -84,7 +84,7 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                             uSphCor = k0 * d * xyXmn(Counter);
                             vSphCor = k0 * d * xyYmn(Counter);
                             % Calculate electrical field
-                            xySphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                            xySphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                         end
                         % Scale Xmn, Ymn, and Zmn
                         Xaxis = xyXmn .* xySphCorAbsCRPSmoothed;
@@ -93,8 +93,8 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
             
                         % OR Plot of smoothed pattern in the xy-plane (Theta = 90 deg) calculated in uv-space and converted to polar system
     %                     for Counter = 1 : 1 : SmoothingFactor * elementNo
-    %                         Xaxis(Counter) = abs(ComplexRadiationPattern(k0 * d * cos(SmoothedMeshPhiPlane(Counter)), k0 * d * sin(SmoothedMeshPhiPlane(Counter)))) * cos(SmoothedMeshPhiPlane(Counter));
-    %                         Yaxis(Counter) = abs(ComplexRadiationPattern(k0 * d * cos(SmoothedMeshPhiPlane(Counter)), k0 * d * sin(SmoothedMeshPhiPlane(Counter)))) * sin(SmoothedMeshPhiPlane(Counter));
+                            % Xaxis(Counter) = abs(ComplexRadiationPattern(k0 * d * cos(SmoothedMeshPhiPlane(Counter)), k0 * d * sin(SmoothedMeshPhiPlane(Counter)), amp, phase)) * cos(SmoothedMeshPhiPlane(Counter));
+                            % Yaxis(Counter) = abs(ComplexRadiationPattern(k0 * d * cos(SmoothedMeshPhiPlane(Counter)), k0 * d * sin(SmoothedMeshPhiPlane(Counter)), amp, phase)) * sin(SmoothedMeshPhiPlane(Counter));
     %                     end
                     case 'EP'
                         % Setting the legend
@@ -140,7 +140,7 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                             uSphCor = k0 * d * xyXmn(Counter);
                             vSphCor = k0 * d * xyYmn(Counter);
                             % Calculate electrical field
-                            xySphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                            xySphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisCRP = xyXmn .* xySphCorAbsCRPSmoothed;
@@ -202,7 +202,7 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                             uSphCor = k0 * d * yzXmn(Counter);
                             vSphCor = k0 * d * yzYmn(Counter);
                             % Calculate electrical field
-                            yzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                            yzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                         end
                         % Scale Xmn, Ymn, and Zmn
     %                     yzScXmn = yzXmn .* yzSphCorAbsCRPSmoothed;
@@ -211,8 +211,8 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                         
                         % Plot of smoothed pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in uv-space and converted to polar system
     %                     for Counter = 1 : 1 : SmoothingFactor * elementNo
-    %                         Xaxis(Counter) = abs(ComplexRadiationPattern(0, k0 * d * sin(SmoothedMeshThetaPlane(Counter)))) * sin(SmoothedMeshThetaPlane(Counter));
-    %                         Yaxis(Counter) = abs(ComplexRadiationPattern(0, k0 * d * sin(SmoothedMeshThetaPlane(Counter)))) * cos(SmoothedMeshThetaPlane(Counter));
+                            % Xaxis(Counter) = abs(ComplexRadiationPattern(0, k0 * d * sin(SmoothedMeshThetaPlane(Counter)), amp, phase)) * sin(SmoothedMeshThetaPlane(Counter));
+                            % Yaxis(Counter) = abs(ComplexRadiationPattern(0, k0 * d * sin(SmoothedMeshThetaPlane(Counter)), amp, phase)) * cos(SmoothedMeshThetaPlane(Counter));
     %                     end
                     case 'EP'
                         % Setting the legend
@@ -257,7 +257,7 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                             uSphCor = k0 * d * yzXmn(Counter);
                             vSphCor = k0 * d * yzYmn(Counter);
                             % Calculate electrical field
-                            yzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                            yzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisCRP = yzYmn .* yzSphCorAbsCRPSmoothed;
@@ -319,7 +319,7 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                             uSphCor = k0 * d * xzXmn(Counter);
                             vSphCor = k0 * d * xzYmn(Counter);
                             % Calculate electrical field
-                            xzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                            xzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                         end
                         % Scale Xmn, Ymn, and Zmn
                         Xaxis = xzXmn .* xzSphCorAbsCRPSmoothed;
@@ -328,8 +328,8 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                         
             %             % Plot of smoothed pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in uv-space and converted to polar system
     %                     for Counter = 1 : 1 : SmoothingFactor * elementNo
-    %                         xzScXmn(Counter) = abs(ComplexRadiationPattern(k0 * d * sin(SmoothedMeshThetaPlane(Counter)), 0)) * sin(SmoothedMeshThetaPlane(Counter));
-    %                         xzScZmn(Counter) = abs(ComplexRadiationPattern(k0 * d * sin(SmoothedMeshThetaPlane(Counter)), 0)) * cos(SmoothedMeshThetaPlane(Counter));
+                            % xzScXmn(Counter) = abs(ComplexRadiationPattern(k0 * d * sin(SmoothedMeshThetaPlane(Counter)), 0, amp, phase)) * sin(SmoothedMeshThetaPlane(Counter));
+                            % xzScZmn(Counter) = abs(ComplexRadiationPattern(k0 * d * sin(SmoothedMeshThetaPlane(Counter)), 0, amp, phase)) * cos(SmoothedMeshThetaPlane(Counter));
     %                     end
                     case 'EP'
                         % Setting the legend
@@ -374,7 +374,7 @@ function PolarPlot2D(FigureName, Plane, PatternType, Lx, Ly)
                             uSphCor = k0 * d * xzXmn(Counter);
                             vSphCor = k0 * d * xzYmn(Counter);
                             % Calculate electrical field
-                            xzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                            xzSphCorAbsCRPSmoothed(Counter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                         end
                         % Scale Xmn, Ymn, and Zmn
                         XaxisCRP = xzXmn .* xzSphCorAbsCRPSmoothed;

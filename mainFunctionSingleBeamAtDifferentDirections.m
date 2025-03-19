@@ -25,28 +25,28 @@ global PatternESmooth PatternESmoothedNormalized;
 % When the key is equal to 0, it will not represent the results
 
 % Plot not smoothed Complex Radiation Pattern (not smoothed)
-NCRPKey = 0;
+NCRPKey = 1;
 
 % Plot smoothed Complex Radiation Pattern
-SCRPKey = 0;
+SCRPKey = 1;
 
 % Plot phase distribution
-PhaseKey = 0;
+PhaseKey = 1;
 
 % Plot not smoothed electric field
-NEFieldKey = 0;
+NEFieldKey = 1;
 
 % Plot smoothed electric field
-SEFieldKey = 0;
+SEFieldKey = 1;
 
 % Plot sampling area
-SAreaKey = 0;
+SAreaKey = 1;
 
 % Run optmization
-OptRunKey = 1;
+OptRunKey = 0;
 
 % Plot optimized results
-OptReskey = 1;
+OptReskey = 0;
 
 %% In this example calculation, the time dependence is exp(+i * ω * t), as is generally assumed in electrical engineering.
 % Therefore, when an EM wave propagates along a distance Rad in free space it acquires a phase delay given by the phase factor exp(-i * k0 * Rad),
@@ -57,15 +57,15 @@ OptReskey = 1;
 % Let us define the MS parameters: Rf, M, N, d
 global Rf;
 Rf = 50.000000;
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Rf.mat', 'Rf');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Rf.mat', 'Rf');
 % Number of elements in each Columns
 global M;
 M = 13;
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\M.mat', 'M');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\M.mat', 'M');
 % Number of elements in each Rows
 global N;
 N = 13;
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\N.mat', 'N');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\N.mat', 'N');
 
 % Operational frequency
 Frequency = 5e9;
@@ -73,7 +73,7 @@ Frequency = 5e9;
 % Determine radius of Protected Areas (PAs)
 % Increasing or decreasing Q's value increases or decreases the radiuses of PAs.
 Q = 1 / sqrt(2);
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Q.mat', 'Q');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Q.mat', 'Q');
 
 % Let us define the sinc(x) function as a pattern
 % Let us now define some radiation pattern we want to realize. In particular, it makes sense to consider patterns
@@ -82,13 +82,13 @@ save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Q.mat', 'Q');
 % Let us define the radiation pattern parameters with L beams:
 global L;
 L = 1;
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\L.mat', 'L');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\L.mat', 'L');
 
 % Rad(n, m) is the radial distance from the source antenna to the (m, n)-th element of the MS.
 % d [cm] is the period of the MS (the distance between the centers of its elements), which is the same along x and y axes.
 global d;
-d = 0.68;
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\d.mat', 'd');
+d = 0.66;
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\d.mat', 'd');
 
 % m and n are scalar values which presents mth and nth element of the metasurface array
 % Rad = @ (n, m) sqrt(Rf^2 + ((n - (N - 1) / 2 + Lx) ^ 2 + (m - (M - 1) / 2 + Ly) ^ 2) * d ^ 2);
@@ -111,7 +111,7 @@ sy = N / 1;
 % Let us define the free space wavelength (Lambda [cm]) and wavenumber:
 global Lambda;
 Lambda = physconst('LightSpeed') / Frequency * 100;
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Lambda.mat', 'Lambda');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Lambda.mat', 'Lambda');
 global k0;
 k0 = 2 * pi / Lambda;
 
@@ -119,16 +119,16 @@ k0 = 2 * pi / Lambda;
 elementNo = N * M;
 
 % The tilt angle of the illuminator/source antenna when phi is zero (between 0 and 90) [deg.]
-thetaSource = 10;
+thetaSource = 0;
 % Rotation of the tilted angle by phi for illuminator/source antenna (between 0 0 to 360) [deg.]
-phiSource = -10;
+phiSource = 0;
 
 % Convert the angles to distance regarding period of the surface
 Lx = Rf * tan(pi * phiSource / 180) / d;
 Ly = Rf * tan(pi * thetaSource / 180) / d;
 
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaSource.mat', 'thetaSource');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\phiSource.mat', 'phiSource');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaSource.mat', 'thetaSource');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\phiSource.mat', 'phiSource');
 
 % Generate Theta and Phi samples which is distributed equidistantly over the upper part of spherical
 % Select point distribution over upper half hemisphere equidistantly
@@ -143,8 +143,8 @@ elseif PointDistributionMethod == 2
     [Theta, Phi] = equiDisPointsOnUpperSphericalCube(maxTiltAngle);
     angleSamplingNo = length(Theta);
 end
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Theta.mat', 'Theta');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Phi.mat', 'Phi');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Theta.mat', 'Theta');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Phi.mat', 'Phi');
 
 % Number of desired data sets
 noDesData = 1;
@@ -315,7 +315,7 @@ for dataSetCounter = 1 : 1 : noDesData
     Ub = 1 / 2;
     % Generate noise
     Noise = Lb + (Ub - Lb) .* rand(N, M);
-    Text = append('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\dataSet', num2str(dataSetCounter), 'Noise', '.mat');
+    Text = append('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\dataSet', num2str(dataSetCounter), 'Noise', '.mat');
     save(Text, 'Noise');
     
     for angleCounter = 1 : 1 : angleSamplingNo
@@ -323,7 +323,7 @@ for dataSetCounter = 1 : 1 : noDesData
         NFE = 0;
         
         % Determine a new path for saving data
-        PathText = append('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\noDesData', num2str(dataSetCounter), 'Theta', num2str(angleCounter), ', ', num2str(Theta(angleCounter)), ' and Phi', num2str(angleCounter), ', ', num2str(Phi(angleCounter)));
+        PathText = append('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\noDesData', num2str(dataSetCounter), 'Theta', num2str(angleCounter), ', ', num2str(Theta(angleCounter)), ' and Phi', num2str(angleCounter), ', ', num2str(Phi(angleCounter)));
         mkdir(PathText);
         
         % Beam directions and states (u = k0 * d * sin(θ) * cos(φ), v = k0 * d * sin(θ) * sin(φ)) (Example: (0, 0) is at the center and perpendicular)
@@ -355,8 +355,13 @@ for dataSetCounter = 1 : 1 : noDesData
         % Complex value of radiation pattern's samples at different values of u and v
 %         ComplexRP = ComplexRadiationPatternOld(kValues, lValues);
 %         ComplexRPSmoothed = ComplexRadiationPatternOld(kValuesSmoothed, lValuesSmoothed);
-        ComplexRP = abs(ComplexRadiationPattern(2 * pi * (kValues - (M - 1) / 2) / (M - 1), 2 * pi * (lValues - (N - 1) / 2) / (N - 1)));
-        ComplexRPSmoothed = abs(ComplexRadiationPattern(2 * pi * (kValuesSmoothed - (M - 1) / 2) / (M - 1), 2 * pi * (lValuesSmoothed - (N - 1) / 2) / (N - 1)));
+        
+        % Amplitude and phase of the beams, with the same dimension L = 1 (number of beams)
+        amp = [1];
+        phase = [0];
+        
+        ComplexRP = abs(ComplexRadiationPattern(2 * pi * (kValues - (M - 1) / 2) / (M - 1), 2 * pi * (lValues - (N - 1) / 2) / (N - 1), amp, phase));
+        ComplexRPSmoothed = abs(ComplexRadiationPattern(2 * pi * (kValuesSmoothed - (M - 1) / 2) / (M - 1), 2 * pi * (lValuesSmoothed - (N - 1) / 2) / (N - 1), amp, phase));
         
         if NCRPKey == 1
             ComplexRPMax = max(ComplexRP, [], 'all');
@@ -421,16 +426,16 @@ for dataSetCounter = 1 : 1 : noDesData
             Plot2Dand3D('Sample Pattern in uv-space', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', ComplexRPSmoothed, '|C(u,v)|', ComplexRPMaxSmoothed, [1, 1], [0, 0], 0, Lx, Ly);
             
             % Smoothed complex radiation pattern in spherical coordinate
-            SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP', Lx, Ly);
+            SphericalPlot3D('Complex radiation pattern in spherical space', 'Normalized |C(x,y)|', 'CRP', Lx, Ly, amp, phase);
             
             % Plot of smoothed CRP in the xy-plane (Theta = 90 deg) calculated in polar system
-            PolarPlot2D('Project pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'CRP', Lx, Ly);
+            PolarPlot2D('Project pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'CRP', Lx, Ly, amp, phase);
             
             % Plot of smoothed CRP in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-            PolarPlot2D('Project pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'CRP', Lx, Ly);
+            PolarPlot2D('Project pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'CRP', Lx, Ly, amp, phase);
             
             % Plot of smoothed CRP in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-            PolarPlot2D('Project pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'CRP', Lx, Ly);
+            PolarPlot2D('Project pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'CRP', Lx, Ly, amp, phase);
         end
         
         %% =============================================================================================================================================================================================
@@ -626,16 +631,16 @@ for dataSetCounter = 1 : 1 : noDesData
             Plot2Dand3D('2D and 3D Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', AbsElectricFieldSmoothed, '|E(u,v)|', AbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0, Lx, Ly);
             
             % Smoothed electrical field in spherical coordinate
-            SphericalPlot3D('Electrical field in spherical space', 'Normalized |E(x,y)|', 'EP', Lx, Ly);
+            SphericalPlot3D('Electrical field in spherical space', 'Normalized |E(x,y)|', 'EP', Lx, Ly, amp, phase);
             
             % Plot of electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
-            PolarPlot2D('Electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'EP', Lx, Ly);
+            PolarPlot2D('Electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'EP', Lx, Ly, amp, phase);
             
             % Plot of electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-            PolarPlot2D('Electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'EP', Lx, Ly);
+            PolarPlot2D('Electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'EP', Lx, Ly, amp, phase);
             
             % Plot of electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-            PolarPlot2D('Electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'EP', Lx, Ly);
+            PolarPlot2D('Electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'EP', Lx, Ly, amp, phase);
         end
         
         %% Equidistant distribution of sampling points
@@ -862,25 +867,25 @@ for dataSetCounter = 1 : 1 : noDesData
                 Plot2Dand3D('2D and 3D Optimized Far-Field Radiation Pattern (UV Base)', gridMaxLocUVBaseXSmoothed, 'u-axis', gridMaxLocUVBaseYSmoothed, 'v-axis', optAbsElectricFieldSmoothed, '|E_{Opt.}(u,v)|', optAbsElectricFieldSmoothedMax, [1, 1], [1, 1], 0, Lx, Ly);
                 
                 % Smoothed optimized electrical field in spherical coordinate
-                SphericalPlot3D('Optimized electrical field in spherical space', 'Normalized |E_{Opt.}(x,y)|', 'OptEP', Lx, Ly);
+                SphericalPlot3D('Optimized electrical field in spherical space', 'Normalized |E_{Opt.}(x,y)|', 'OptEP', Lx, Ly, amp, phase);
                 
                 % Plot of optimized electric pattern in the xy-plane (Theta = 90 deg) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'OptEP', Lx, Ly);
+                PolarPlot2D('Optimized electric pattern in the xy-plane (Theta = 90 deg)', 'xy-plane', 'OptEP', Lx, Ly, amp, phase);
                 
                 % Plot of optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'OptEP', Lx, Ly);
+                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'OptEP', Lx, Ly, amp, phase);
                 
                 % Plot of optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'OptEP', Lx, Ly);
+                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'OptEP', Lx, Ly, amp, phase);
                 
                 % Plot of smoothed CRP, EF, and OptEF in the xy-plane (Theta = 90 deg) calculated in polar system
-                PolarPlot2D('Project pattern, EF, and OptEF in the xy-plane (Theta = 90 deg)', 'xy-plane', 'All', Lx, Ly);
+                PolarPlot2D('Project pattern, EF, and OptEF in the xy-plane (Theta = 90 deg)', 'xy-plane', 'All', Lx, Ly, amp, phase);
                 
                 % Plot of smoothed CRP, EF, and OptEF in the yz-plane (Phi = 90 or 270 deg, therefore u = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'All', Lx, Ly);
+                PolarPlot2D('Optimized electric pattern in the yz-plane (Phi = 90 or 270 deg, therefore u = 0)', 'yz-plane', 'All', Lx, Ly, amp, phase);
                 
                 % Plot of smoothed CRP, EF, and OptEF in the xz-plane (Phi = 0 or 180 deg, therefore v = 0) calculated in polar system
-                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'All', Lx, Ly);
+                PolarPlot2D('Optimized electric pattern in the xz-plane (Phi = 0 or 180 deg, therefore v = 0)', 'xz-plane', 'All', Lx, Ly, amp, phase);
             end
             
             % Save data
@@ -900,26 +905,26 @@ for dataSetCounter = 1 : 1 : noDesData
     end
 end
 
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPhaseWoN.mat', 'thetaPhiPhaseWoN');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPhaseWN.mat', 'thetaPhiPhaseWN');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPhaseOpt.mat', 'thetaPhiPhaseOpt');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\modifiedPhaseOpt.mat', 'modifiedPhaseOpt');
 
-% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
-% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatCRSmoothedNormalized.mat', 'thetaPhiPatCRSmoothedNormalized');
+% save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatCR.mat', 'thetaPhiPatCR');
+% save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatCRNormalized.mat', 'thetaPhiPatCRNormalized');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatCRSmoothed.mat', 'thetaPhiPatCRSmoothed');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatCRSmoothedNormalized.mat', 'thetaPhiPatCRSmoothedNormalized');
 
 
-% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatE.mat', 'thetaPhiPatE');
-% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatENormalized.mat', 'thetaPhiPatENormalized');
-% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatEOpt.mat', 'thetaPhiPatEOpt');
-% save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatEOptNormalized.mat', 'thetaPhiPatEOptNormalized');
+% save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatE.mat', 'thetaPhiPatE');
+% save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatENormalized.mat', 'thetaPhiPatENormalized');
+% save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatEOpt.mat', 'thetaPhiPatEOpt');
+% save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatEOptNormalized.mat', 'thetaPhiPatEOptNormalized');
 
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatESmoothed.mat', 'thetaPhiPatESmoothed');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatESmoothedNormalized.mat', 'thetaPhiPatESmoothedNormalized');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatESmoothedOpt.mat', 'thetaPhiPatESmoothedOpt');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\thetaPhiPatESmoothedOptNormalized.mat', 'thetaPhiPatESmoothedOptNormalized');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatESmoothed.mat', 'thetaPhiPatESmoothed');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatESmoothedNormalized.mat', 'thetaPhiPatESmoothedNormalized');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatESmoothedOpt.mat', 'thetaPhiPatESmoothedOpt');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\thetaPhiPatESmoothedOptNormalized.mat', 'thetaPhiPatESmoothedOptNormalized');
 
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Coeff1.mat', 'Coeff1');
-save('C:\Users\k.kaboutari\Desktop\AI-Beamforming Abdel\Data\Coeff2.mat', 'Coeff2');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Coeff1.mat', 'Coeff1');
+save('C:\Users\k.kaboutari\Desktop\13by13 MS by Abdel\Data\Coeff2.mat', 'Coeff2');

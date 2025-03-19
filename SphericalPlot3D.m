@@ -1,4 +1,4 @@
-function SphericalPlot3D(FigureName, Zlabel, PatternType, Lx, Ly)
+function SphericalPlot3D(FigureName, Zlabel, PatternType, Lx, Ly, amp, phase)
     global M N d k0 SmoothingFactor left_color right_color;
 
     % Element number
@@ -34,7 +34,7 @@ function SphericalPlot3D(FigureName, Zlabel, PatternType, Lx, Ly)
                     vSphCor = k0 * d * Ymn(lCounter, kCounter);
                     
                     % Calculate complex radiation pattern
-                    SphCorAbsCRPSmoothed(lCounter, kCounter) = abs(ComplexRadiationPattern(uSphCor, vSphCor));
+                    SphCorAbsCRPSmoothed(lCounter, kCounter) = abs(ComplexRadiationPattern(uSphCor, vSphCor, amp, phase));
                 end
             end
             % Scale Xmn, Ymn, and Zmn
